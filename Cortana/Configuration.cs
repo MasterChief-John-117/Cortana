@@ -32,11 +32,13 @@ namespace Cortana
             this.Prefix = config.Prefix;
             this.ExecEdits = config.execEdits;   
         }
+
+        public Configuration UpdateToken()
         {
-            this.Token = config.Token;
-            this.TokenType = config.TokenType;
-            this.Prefix = config.Prefix;
-            this.execEdits = config.execEdits;   
+            Console.WriteLine($"There's an issue with your token! Please put an updated one here: ");
+            this.Token = Console.ReadLine().Trim(' ', '"');
+            File.WriteAllText("files/config.json", JsonConvert.SerializeObject(this, Formatting.Indented));
+            return this;
         }
     }
 }
