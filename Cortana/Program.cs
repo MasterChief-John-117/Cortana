@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Discord;
@@ -15,7 +16,9 @@ namespace Cortana
     {
         public static DiscordSocketClient Client;
         private Configuration _config;
-
+        private int _loadedGuilds = 0;
+        private int _totalGuilds;
+        
         public static void Main(string[] args) =>
              new Program().Start().GetAwaiter().GetResult();
         
@@ -35,7 +38,7 @@ namespace Cortana
             Client = new DiscordSocketClient(new DiscordSocketConfig
             {
                 LogLevel = LogSeverity.Verbose, //for most debug, Verbose. For normal use, Crit is fine
-                AlwaysDownloadUsers = true
+                AlwaysDownloadUsers = false
             });
             Client.Log += Log;
 
@@ -76,14 +79,26 @@ namespace Cortana
 
         private async Task _onReady()
         {
-            Console.WriteLine("Almost ready to go! Your prefix is \"{0}\"", _config.Prefix);
-            Console.WriteLine($"Connexting to {Client.Guilds.Count} guilds");
+            _totalGuilds = Client.Guilds.Count;
 
         }
 
         private Task Log(LogMessage msg)
         {
-            Console.WriteLine(DateTime.Now + ": " + msg.ToString());
+            if (msg.ToString().Contains("Connected to"))
+            {
+                Console.Clear();
+                _loadedGuilds++;
+                var sb = new StringBuilder();
+                sb.AppendLine($"You prefix is \"{_config.Prefix}\"");
+                sb.AppendLine("Guild loading progress: ");
+                sb.Append("[");
+                sb.Append('|', (50 *_loadedGuilds) / _totalGuilds);
+                sb.Append(' ', 50 - (50 * _loadedGuilds ) / _totalGuilds);
+                sb.Append(']');
+                sb.Append($" ({_loadedGuilds}/{_totalGuilds})");
+                Console.WriteLine(sb.ToString());
+            }
             return Task.FromResult(0);
         }
     }
