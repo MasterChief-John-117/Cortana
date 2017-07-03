@@ -31,7 +31,7 @@ namespace Cortana
             Console.WriteLine($"You need to create a new configuration! Follow the below steps to begin");
             //token
             Console.WriteLine($"Enter the token you wish to use: ");
-            string token = Console.ReadLine();
+            string token = Console.ReadLine().Trim(' ', '"');
             //account type in case bot is needed 
             Console.WriteLine($"Enter the account type you are using (\"bot\"/\"user\")");
             string type = Console.ReadLine().ToLower();
@@ -44,7 +44,7 @@ namespace Cortana
             }
             //prefix
             Console.WriteLine($"Enter the prefix you wish to use: ");
-            string prefix = Console.ReadLine();
+            string prefix = Console.ReadLine().TrimStart();
             //execute edits?
             Console.WriteLine($"Do you want edited messages to be treated as commands? (y/n)");
             string edits = Console.ReadLine().ToLower();
