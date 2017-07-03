@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -90,7 +91,6 @@ namespace Cortana
         {
             if (msg.ToString().Contains("Connected to"))
             {
-                Console.Clear();
                 _loadedGuilds++;
                 var sb = new StringBuilder();
                 sb.AppendLine($"You prefix is \"{_config.Prefix}\"");
@@ -101,6 +101,8 @@ namespace Cortana
                 sb.Append(']');
                 sb.Append($" ({_loadedGuilds}/{_totalGuilds})");
                 sb.Append($" [{_stopwatch.ElapsedMilliseconds/1000}s]");
+                sb.Append($" {{{Client.Guilds.Sum(x => x.Users.Count())} users}}");
+                Console.Clear();
                 Console.WriteLine(sb.ToString());
             }
             return Task.FromResult(0);
