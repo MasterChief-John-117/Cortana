@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -18,6 +19,7 @@ namespace Cortana
         private Configuration _config;
         private int _loadedGuilds = 0;
         private int _totalGuilds;
+        private Stopwatch _stopwatch = new Stopwatch();
         
         public static void Main(string[] args) =>
              new Program().Start().GetAwaiter().GetResult();
@@ -45,6 +47,7 @@ namespace Cortana
             try
             {
                 await Client.LoginAsync(_config.TokenType, _config.Token);
+                _stopwatch.Start();
                 await Client.StartAsync();
             }
             catch (HttpException httpException)
@@ -97,6 +100,7 @@ namespace Cortana
                 sb.Append(' ', 50 - (50 * _loadedGuilds ) / _totalGuilds);
                 sb.Append(']');
                 sb.Append($" ({_loadedGuilds}/{_totalGuilds})");
+                sb.Append($" [{_stopwatch.ElapsedMilliseconds/1000}s]");
                 Console.WriteLine(sb.ToString());
             }
             return Task.FromResult(0);
