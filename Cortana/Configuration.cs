@@ -10,28 +10,28 @@ namespace Cortana
         [JsonProperty("token")]
         public string Token;
         [JsonProperty("tokenType")]
-        public TokenType TokenType = TokenType.User;
+        public TokenType TokenType;
         [JsonProperty("prefix")]
         public string Prefix;
         [JsonProperty("executeEdits")]
-        public bool execEdits;
+        public bool ExecEdits;
 
+        [JsonConstructor]
         public Configuration(string token, TokenType tType, string prefix, bool edits)
         {
             this.Token = token;
             this.TokenType = tType;
             this.Prefix = prefix;
-            this.execEdits = edits;
+            this.ExecEdits = edits;
         }
-        public Configuration()
+
+        public Configuration(ConfigurationBuilder config)
         {
-            Configuration config = JsonConvert.DeserializeObject<Configuration>(File.ReadAllText("files/config.json"));
             this.Token = config.Token;
             this.TokenType = config.TokenType;
             this.Prefix = config.Prefix;
-            this.execEdits = config.execEdits;   
+            this.ExecEdits = config.execEdits;   
         }
-        public Configuration(ConfigurationBuilder config)
         {
             this.Token = config.Token;
             this.TokenType = config.TokenType;
