@@ -30,8 +30,8 @@ namespace Cortana
                 _config = new Configuration(new ConfigurationBuilder().createConfiguration());
                 File.WriteAllText("files/config.json", JsonConvert.SerializeObject(_config, Formatting.Indented));
             }
-            else _config = JsonConvert.DeserializeObject<Configuration>(File.ReadAllText("files/config.json"));
-            
+
+            else _config = new Configuration();
             Client = new DiscordSocketClient(new DiscordSocketConfig
             {
                 LogLevel = LogSeverity.Verbose, //for most debug, Verbose. For normal use, Crit is fine
@@ -44,7 +44,7 @@ namespace Cortana
                 await Client.LoginAsync(_config.TokenType, _config.Token);
                 await Client.StartAsync();
             }
-            catch (Discord.Net.HttpException httpException)
+            catch (HttpException httpException)
             {
                 if (httpException.HttpCode == HttpStatusCode.Unauthorized)
                 {
@@ -58,8 +58,8 @@ namespace Cortana
 
             var serviceProvider = ConfigureServices();
 
-//          _handler = new CommandHandler();
-//          await _handler.Install(serviceProvider);
+            var _handler = new CommandHandler();
+            await _handler.Install(serviceProvider);
 
             // Block this program until it is closed.
             await Task.Delay(-1);
@@ -77,7 +77,7 @@ namespace Cortana
         private async Task _onReady()
         {
             Console.WriteLine("Almost ready to go! Your prefix is \"{0}\"", _config.Prefix);
-            Console.WriteLine($"on {Client.Guilds.Count} guilds");
+            Console.WriteLine($"Connexting to {Client.Guilds.Count} guilds");
 
         }
 

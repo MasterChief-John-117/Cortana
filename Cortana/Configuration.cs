@@ -33,6 +33,15 @@ namespace Cortana
             this.ExecEdits = config.execEdits;   
         }
 
+        public Configuration()
+        {
+            Configuration config = JsonConvert.DeserializeObject<Configuration>(File.ReadAllText("files/config.json"));
+            this.Token = config.Token;
+            this.TokenType = config.TokenType;
+            this.Prefix = config.Prefix;
+            this.ExecEdits = config.ExecEdits; 
+        }
+
         public Configuration UpdateToken()
         {
             Console.WriteLine($"There's an issue with your token! Please put an updated one here: ");
