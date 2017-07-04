@@ -81,6 +81,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Modules\BotModule.cs" />
     <Compile Include="CommandHandler.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="ConfigurationBuilder.cs" />
