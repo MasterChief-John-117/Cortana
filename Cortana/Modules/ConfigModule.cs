@@ -15,6 +15,7 @@ namespace Cortana.Modules
         {
             CommandHandler._config.Prefix = pref;
             File.WriteAllText("files/config.json", JsonConvert.SerializeObject(CommandHandler._config, Formatting.Indented));
+            await ReplyAsync($"Your prefix is now `{CommandHandler._config.Prefix}`");
         }
     }
 }
