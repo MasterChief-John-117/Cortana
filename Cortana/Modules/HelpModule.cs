@@ -54,18 +54,24 @@ namespace Cortana.Modules
         public async Task GroupHelp(string mod)
         {
             var em = new EmbedBuilder();
-            em.WithAuthor(new EmbedAuthorBuilder().WithName($"Module Help").WithIconUrl(Context.User.GetAvatarUrl()));
-            foreach(var cmg in CommandHandler._commands.Commands.Where(cmd => !string.IsNullOrEmpty(cmd.Remarks) && cmd.Remarks == mod.ToLower()))
-            {
-                em.AddField(new EmbedFieldBuilder().WithName(cmg.Name).WithValue(!string.IsNullOrEmpty(cmg.Summary) ? cmg.Summary : "No Summary"));
-            }
-            em.WithCurrentTimestamp();
             var color = (Context.User as SocketGuildUser).Roles.OrderByDescending(r => r.Position)    
                 .FirstOrDefault(r => r.Color.RawValue != new Color(0, 0, 0).RawValue).Color;
             if (color.R > 20 || color.G > 20 || color.B > 20)
             {
                 em.WithColor(color);
             }
+            em.WithAuthor(new EmbedAuthorBuilder().WithName($"Module Help").WithIconUrl(Context.User.GetAvatarUrl()));
+            foreach(var cmg in CommandHandler._commands.Commands.Where(cmd => !string.IsNullOrEmpty(cmd.Remarks) && cmd.Remarks == mod.ToLower()))
+            {
+                em.AddField(new EmbedFieldBuilder().WithName(cmg.Name).WithValue(!string.IsNullOrEmpty(cmg.Summary) ? cmg.Summary : "No Summary"));
+            }
+            em.WithCurrentTimestamp();
+            if (!CommandHandler._commands.Commands.Any(cmd =>
+                !string.IsNullOrEmpty(cmd.Remarks) && cmd.Remarks == mod.ToLower()))
+            {
+                em.WithDescription($"The module `{mod}` was not found");
+            }
+
             await ReplyAsync("", embed: em.Build());
         }
     }
