@@ -42,8 +42,8 @@ namespace Cortana.Modules
             em.AddField(new EmbedFieldBuilder().WithName("Users")
                 .WithValue(Context.Client.GetGuildsAsync().Result.Sum(g => g.GetUsersAsync().Result.Count)).WithIsInline(true));
 
-            em.AddField(new EmbedFieldBuilder().WithName("NSFW Guilds")
-                .WithValue(Context.Client.GetGuildsAsync().Result.Count(g => g.GetChannelsAsync().Result.Any(c => c.IsNsfw))).WithIsInline(true));
+            em.AddField(new EmbedFieldBuilder().WithName("Text Channels")
+                .WithValue(Context.Client.GetGuildsAsync().Result.Sum(g => g.GetTextChannelsAsync().Result.Count)).WithIsInline(true));
             em.AddField(new EmbedFieldBuilder().WithName("NSFW Channels")
                 .WithValue(Context.Client.GetGuildsAsync()
                 .Result.Sum(g => g.GetChannelsAsync().Result.Count(c => c.IsNsfw))).WithIsInline(true));
