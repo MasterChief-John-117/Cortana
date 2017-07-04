@@ -50,6 +50,13 @@ namespace Cortana.Modules
             em.AddField(new EmbedFieldBuilder().WithName("Open DMs")
                 .WithValue(Context.Client.GetPrivateChannelsAsync().Result.Count).WithIsInline(true));
             
+            em.AddField(new EmbedFieldBuilder().WithName("Emotes")
+                .WithValue(Context.Client.GetGuildsAsync().Result.Sum(g => g.Emotes.Count)).WithIsInline(true));
+            em.AddField(new EmbedFieldBuilder().WithName("Global Emotes")
+                .WithValue(Context.Client.GetGuildsAsync().Result.Sum(g => g.Emotes.Count(e => e.IsManaged))).WithIsInline(true));
+            em.AddField(new EmbedFieldBuilder().WithName("Emote Servers")
+                .WithValue(Context.Client.GetGuildsAsync().Result.Count(g => g.Emotes.Any(e => e.IsManaged))).WithIsInline(true));
+            
             em.AddField(new EmbedFieldBuilder().WithName("Guilds Owned")
                 .WithValue(Context.Client.GetGuildsAsync().Result.Count(g => g.OwnerId == Context.User.Id)).WithIsInline(true));
             em.AddField(new EmbedFieldBuilder().WithName("Verified Email")
