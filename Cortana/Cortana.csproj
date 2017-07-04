@@ -85,6 +85,8 @@
     <Compile Include="CommandHandler.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="ConfigurationBuilder.cs" />
+    <Compile Include="Modules\ConfigModule.cs" />
+    <Compile Include="Modules\HelpModule.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

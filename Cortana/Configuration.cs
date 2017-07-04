@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace Cortana
 {
-    class Configuration
+    public class Configuration
     {
         [JsonProperty("token")]
         public string Token;

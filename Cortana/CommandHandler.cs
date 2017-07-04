@@ -12,7 +12,7 @@ namespace Cortana
         public static CommandService _commands;
         private DiscordSocketClient _client;
         private IServiceProvider _map;
-        private Configuration _config = new Configuration();
+        public static Configuration _config = new Configuration();
         
         public async Task Install(IServiceProvider map)
         {
