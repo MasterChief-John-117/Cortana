@@ -42,11 +42,19 @@ namespace Cortana.Modules
             }
             
             em.WithCurrentTimestamp();
-            var color = (Context.User as SocketGuildUser).Roles.OrderByDescending(r => r.Position)    
-                .FirstOrDefault(r => r.Color.RawValue != new Color(0, 0, 0).RawValue).Color;
-            if (color.R > 20 || color.G > 20 || color.B > 20)
+            try
             {
-                em.WithColor(color);
+                var color = (Context.User as SocketGuildUser).Roles.OrderByDescending(r => r.Position)
+                    .FirstOrDefault(r => r.Color.RawValue != new Color(0, 0, 0).RawValue).Color;
+
+                if (color.R > 20 || color.G > 20 || color.B > 20)
+                {
+                    em.WithColor(color);
+                }
+            }
+            catch (Exception ex)
+            {
+                
             }
             await ReplyAsync("", embed: em.Build());
         }
@@ -54,11 +62,19 @@ namespace Cortana.Modules
         public async Task GroupHelp(string mod)
         {
             var em = new EmbedBuilder();
-            var color = (Context.User as SocketGuildUser).Roles.OrderByDescending(r => r.Position)    
-                .FirstOrDefault(r => r.Color.RawValue != new Color(0, 0, 0).RawValue).Color;
-            if (color.R > 20 || color.G > 20 || color.B > 20)
+            try
             {
-                em.WithColor(color);
+                var color = (Context.User as SocketGuildUser).Roles.OrderByDescending(r => r.Position)
+                    .FirstOrDefault(r => r.Color.RawValue != new Color(0, 0, 0).RawValue).Color;
+
+                if (color.R > 20 || color.G > 20 || color.B > 20)
+                {
+                    em.WithColor(color);
+                }
+            }
+            catch (Exception ex)
+            {
+                
             }
             em.WithAuthor(new EmbedAuthorBuilder().WithName($"Module Help").WithIconUrl(Context.User.GetAvatarUrl()));
             foreach(var cmg in CommandHandler._commands.Commands.Where(cmd => !string.IsNullOrEmpty(cmd.Remarks) && cmd.Remarks == mod.ToLower()))
