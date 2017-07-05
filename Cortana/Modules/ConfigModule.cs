@@ -17,5 +17,23 @@ namespace Cortana.Modules
             File.WriteAllText("files/config.json", JsonConvert.SerializeObject(CommandHandler._config, Formatting.Indented));
             await ReplyAsync($"Your prefix is now `{CommandHandler._config.Prefix}`");
         }
+        
+        [Command("executeEditedMessages")][Summary("Choose whether or not edited messages are treated as commands")][Remarks("config")]
+        public async Task Config_ExecuteEditedMessages(string option)
+        {
+            if (option.ToLower().Equals("false"))
+            {
+                CommandHandler._config.ExecEdits = false;
+                File.WriteAllText("files/config.json", JsonConvert.SerializeObject(CommandHandler._config, Formatting.Indented));
+                await ReplyAsync("Edited messages will not be treated as commands");
+            }
+            else if (option.ToLower().Equals("true"))
+            {
+                CommandHandler._config.ExecEdits = true;
+                File.WriteAllText("files/config.json", JsonConvert.SerializeObject(CommandHandler._config, Formatting.Indented));
+                await ReplyAsync("Edited messages will now be executed as commands");
+            }
+            else await ReplyAsync("unknown parameter");
+        }
     }
 }
