@@ -43,7 +43,7 @@ namespace Cortana
             //VERY IMPORTANT: Return if the message is not by the Bot Owner
             //Not doing this allows anyone to execute our commands, which
             //will get Discord to ban us very quickly
-            if (parameterMessage.Author.Id != _client.CurrentUser.Id) return;
+            if (_config.TokenType == TokenType.User && parameterMessage.Author.Id != _client.CurrentUser.Id) return;
 
             // Determine if the message has a valid prefix, adjust argPos
             if (!message.HasStringPrefix(_config.Prefix, ref argPos)) return;
