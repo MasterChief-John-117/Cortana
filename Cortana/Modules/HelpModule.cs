@@ -30,7 +30,7 @@ namespace Cortana.Modules
             {
                 try
                 {
-                    cmgs.Add(cmg.Remarks);
+                    if(!cmgs.Contains(cmg.Remarks)) cmgs.Add(cmg.Remarks);
                 }
                 catch (Exception ex)
                 {
