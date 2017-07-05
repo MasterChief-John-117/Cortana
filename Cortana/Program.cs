@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Discord;
@@ -20,12 +21,17 @@ namespace Cortana
         private Configuration _config;
         private int _loadedGuilds = 0;
         private int _totalGuilds;
-        private Stopwatch _stopwatch = new Stopwatch();
-        
-        public static void Main(string[] args) =>
-             new Program().Start().GetAwaiter().GetResult();
-        
+        private  Stopwatch _stopwatch = new Stopwatch();
 
+        public static void Main(string[] args)
+        {
+            if (args.Any() && args[0].Equals("disconnected"))
+            {
+                Console.WriteLine("It died, but at least this worked!");
+            }
+            else new Program().Start().GetAwaiter().GetResult();
+                
+        }
 
         public async Task Start()
         {
@@ -63,6 +69,12 @@ namespace Cortana
 
             Client.Ready += _onReady;
 
+            Client.Disconnected += exception =>
+            {
+                Main(new string[] {"disconnected"});
+                return Task.FromResult(1);
+            }; 
+            
             var serviceProvider = ConfigureServices();
 
             var _handler = new CommandHandler();
@@ -71,12 +83,16 @@ namespace Cortana
             // Block this program until it is closed.
             await Task.Delay(-1);
         }
-        
+
         private IServiceProvider ConfigureServices()
         {
             var services = new ServiceCollection()
                 .AddSingleton(Client)
-                .AddSingleton(new CommandService(new CommandServiceConfig { CaseSensitiveCommands = false, ThrowOnError = false}));
+                .AddSingleton(new CommandService(new CommandServiceConfig
+                {
+                    CaseSensitiveCommands = false, 
+                    ThrowOnError = false
+                }));
             var provider = new DefaultServiceProviderFactory().CreateServiceProvider(services);
             return provider;
         }
@@ -84,9 +100,8 @@ namespace Cortana
         private async Task _onReady()
         {
             _totalGuilds = Client.Guilds.Count;
-
         }
-
+        
         private Task Log(LogMessage msg)
         {
             if (msg.ToString().Contains("Connected to"))
@@ -102,9 +117,10 @@ namespace Cortana
                 sb.Append($" ({_loadedGuilds}/{_totalGuilds})");
                 sb.Append($" [{_stopwatch.ElapsedMilliseconds/1000}s]");
                 sb.Append($" {{{Client.Guilds.Sum(x => x.Users.Count())} users}}");
-                Console.Clear();
+                //Console.Clear();
                 Console.WriteLine(sb.ToString());
             }
+            else Console.WriteLine(msg);
             return Task.FromResult(0);
         }
     }
