@@ -34,6 +34,7 @@ namespace Cortana.Modules
                 }
                 catch (Exception ex)
                 {
+                    // ignored
                 }
             }
             foreach (var cmg in cmgs)
@@ -54,7 +55,7 @@ namespace Cortana.Modules
             }
             catch (Exception ex)
             {
-                
+                // ignored
             }
             await ReplyAsync("", embed: em.Build());
         }
@@ -74,7 +75,7 @@ namespace Cortana.Modules
             }
             catch (Exception ex)
             {
-                
+                // ignored
             }
             em.WithAuthor(new EmbedAuthorBuilder().WithName($"Module Help").WithIconUrl(Context.User.GetAvatarUrl()));
             foreach(var cmg in CommandHandler._commands.Commands.Where(cmd => !string.IsNullOrEmpty(cmd.Remarks) && cmd.Remarks == mod.ToLower()))
