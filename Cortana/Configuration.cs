@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Discord;
 using Newtonsoft.Json;
@@ -15,6 +16,8 @@ namespace Cortana
         public string Prefix;
         [JsonProperty("executeEdits")]
         public bool ExecEdits;
+        [JsonProperty("guildToSuppressRoles")] 
+        public List<ulong> GuildSuppressionList;
 
         [JsonConstructor]
         public Configuration(string token, TokenType tType, string prefix, bool edits)
