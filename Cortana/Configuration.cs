@@ -26,6 +26,7 @@ namespace Cortana
             this.TokenType = tType;
             this.Prefix = prefix;
             this.ExecEdits = edits;
+            GuildSuppressionList = new List<ulong>(0);
         }
 
         public Configuration(ConfigurationBuilder config)
@@ -34,6 +35,7 @@ namespace Cortana
             this.TokenType = config.TokenType;
             this.Prefix = config.Prefix;
             this.ExecEdits = config.execEdits;   
+            GuildSuppressionList = new List<ulong>(0);
         }
 
         public Configuration()
@@ -42,7 +44,8 @@ namespace Cortana
             this.Token = config.Token;
             this.TokenType = config.TokenType;
             this.Prefix = config.Prefix;
-            this.ExecEdits = config.ExecEdits; 
+            this.ExecEdits = config.ExecEdits;
+            this.GuildSuppressionList = config.GuildSuppressionList; 
         }
 
         public Configuration UpdateToken()
