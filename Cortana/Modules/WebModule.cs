@@ -12,7 +12,7 @@ namespace Cortana.Modules
         {
             using (var client = new WebClient())
             {
-                await ReplyAsync($"```\n{client.DownloadString(url)}```");
+                await ReplyAsync($"{client.DownloadString(url)}");
             }
         }
     }
