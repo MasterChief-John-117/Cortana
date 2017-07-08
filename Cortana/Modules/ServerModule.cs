@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
+using Discord.WebSocket;
 
 namespace Cortana.Modules
 {
@@ -140,6 +143,35 @@ namespace Cortana.Modules
                 msg += voiceChannels;
                 await ReplyAsync(msg);
             }
+        }
+
+        [Command("membersOf")][Summary("Lists the members of a specified role")]
+        public async Task MembersOf(string name, ulong guildId = 0)
+        {
+            var guild = guildId == 0 ? Context.Guild : Context.Client.GetGuildAsync(guildId).Result;
+
+            var roles = (guild as SocketGuild).Roles.Where(r => Regex.IsMatch(r.Name, name, RegexOptions.IgnoreCase)).OrderByDescending(r => r.Position).ToList();
+            var roleList = new Dictionary<string, string>();
+
+            foreach (var role in roles)
+            {
+                string members = "";
+                foreach (var user in role.Members)
+                {
+                    members += $"{user}\n";
+                }
+                if (members == "") members = "No Members";
+                roleList.Add(role.Name, members);
+            }
+            
+            var em = new EmbedBuilder();
+            em.WithColor(roles.First().Color);
+            em.WithTitle(guild.Name);
+            foreach (KeyValuePair<string, string> kvp in roleList)
+            {
+                em.AddField(kvp.Key, kvp.Value);
+            }
+            await ReplyAsync("", embed: em.Build());
         }
     }
 }
