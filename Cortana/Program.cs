@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Mime;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,6 +24,8 @@ namespace Cortana
         private int _totalGuilds;
         private  Stopwatch _stopwatch = new Stopwatch();
 
+        private string newestVer = new WebClient().DownloadString("http://api.mcjohn117.duckdns.org/cortana/latest").Trim();
+        private string upToDate;
         public static void Main(string[] args)
         {
             if (args.Any() && args[0].Equals("disconnected"))
@@ -35,6 +38,7 @@ namespace Cortana
 
         public async Task Start()
         {
+            upToDate = currentVer == newestVer ? $"Cortana is up to date! {currentVer}" : $"Cortana is out of date ({currentVer} < {newestVer})";
             //Make sure we have valid files
             if (!Directory.Exists("files")) Directory.CreateDirectory("files");
             if (!File.Exists("files/config.json"))
@@ -99,6 +103,12 @@ namespace Cortana
 
         private async Task _onReady()
         {
+            if (Client.CurrentUser.Id != 169918990313848832)
+            {
+                Console.WriteLine($"Sorry, {Client.CurrentUser.Username}, but you're not authorized to use this bot yet! Wait for the Beta release");
+                Console.ReadKey();
+                System.Environment.Exit(1);
+            }
             _totalGuilds = Client.Guilds.Count;
         }
         
@@ -108,6 +118,7 @@ namespace Cortana
             {
                 _loadedGuilds++;
                 var sb = new StringBuilder();
+                sb.AppendLine(upToDate);
                 sb.AppendLine($"You prefix is \"{_config.Prefix}\"");
                 sb.AppendLine("Guild loading progress: ");
                 sb.Append("[");
@@ -117,10 +128,10 @@ namespace Cortana
                 sb.Append($" ({_loadedGuilds}/{_totalGuilds})");
                 sb.Append($" [{_stopwatch.ElapsedMilliseconds/1000}s]");
                 sb.Append($" {{{Client.Guilds.Sum(x => x.Users.Count())} users}}");
-                //Console.Clear();
+                Console.Clear();
                 Console.WriteLine(sb.ToString());
             }
-            else Console.WriteLine(msg);
+            //else Console.WriteLine(msg);
             return Task.FromResult(0);
         }
     }
