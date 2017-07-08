@@ -89,6 +89,7 @@
     <Compile Include="Modules\HackyAFModule.cs" />
     <Compile Include="Modules\HelpModule.cs" />
     <Compile Include="Modules\ServerModule.cs" />
+    <Compile Include="Modules\WebModule.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
