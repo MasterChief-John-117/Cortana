@@ -24,6 +24,7 @@ namespace Cortana
         private int _totalGuilds;
         private  Stopwatch _stopwatch = new Stopwatch();
 
+        private string currentVer = "0.1.31";
         private string newestVer = new WebClient().DownloadString("http://api.mcjohn117.duckdns.org/cortana/latest").Trim();
         private string upToDate;
         public static void Main(string[] args)
