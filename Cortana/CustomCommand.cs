@@ -1,14 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace Cortana
 {
     public class CustomCommand
     {
+        [JsonProperty("name")]
         public string Command;
+        [JsonProperty("aliases")]
         public List<string> Aliases = new List<string>();
+        [JsonProperty("value")]
         public string Value;
+        [JsonProperty("delete")]
         public bool Delete= true;
 
         public CustomCommand(string c, string v)
