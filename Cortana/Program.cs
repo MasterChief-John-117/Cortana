@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -47,8 +48,14 @@ namespace Cortana
                 _config = new Configuration(new ConfigurationBuilder().createConfiguration());
                 File.WriteAllText("files/config.json", JsonConvert.SerializeObject(_config, Formatting.Indented));
             }
-
             else _config = new Configuration();
+            
+            if (!File.Exists("files/customCommands.json"))
+            {
+                var tempCommands = new List<CustomCommand>();
+                tempCommands.Add(new CustomCommand("cortana", "This is the Cortana self-bot!"));
+                File.WriteAllText("files/customCommands.json", JsonConvert.SerializeObject(tempCommands, Formatting.Indented));
+            }
             Client = new DiscordSocketClient(new DiscordSocketConfig
             {
                 LogLevel = LogSeverity.Verbose, //for most debug, Verbose. For normal use, Crit is fine

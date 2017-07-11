@@ -10,7 +10,7 @@ namespace Cortana
         [JsonProperty("name")]
         public string Command;
         [JsonProperty("aliases")]
-        public List<string> Aliases = new List<string>();
+        public List<string> Aliases = new List<string>(new string[]{""});
         [JsonProperty("value")]
         public string Value;
         [JsonProperty("delete")]
@@ -18,8 +18,17 @@ namespace Cortana
 
         public CustomCommand(string c, string v)
         {
-            Command = c.ToLower().Trim();
-            Value = v;
+            this.Command = c.ToLower().Trim();
+            this.Value = v;
+        }
+
+        [JsonConstructor]
+        public CustomCommand(string c, List<string> a, string v, bool d)
+        {
+            this.Command = c;
+            this.Aliases = a;
+            this.Value = v;
+            this.Delete = d;
         }
 
         public string GetAliases()
