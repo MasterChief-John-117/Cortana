@@ -80,5 +80,25 @@ namespace Cortana.Modules
             await Context.Message.DeleteAsync();
         }
 
+        [Command("info")]
+        [Summary("Shows info about a custom command")]
+        [Remarks("commands")]
+        public async Task CommandInfo(string name)
+        {
+            if (CommandHandler.CustomCommands.All(c => c.Command != name.ToLower()))
+            {
+                await ReplyAsync($"There is no command named `{name}`");
+                return;
+            }
+            var cmd = CommandHandler.CustomCommands.First(c => c.Command.Equals(name.ToLower()));
+
+            var em = new EmbedBuilder();
+            em.AddField(new EmbedFieldBuilder().WithName("Name").WithValue(cmd.Command).WithIsInline(true));
+            em.AddField(new EmbedFieldBuilder().WithName("Aliases").WithValue(cmd.GetAliases()).WithIsInline(true));
+            em.AddField(new EmbedFieldBuilder().WithName("Value").WithValue(cmd.Value).WithIsInline(false));
+            em.AddField(new EmbedFieldBuilder().WithName("Delete").WithValue(cmd.Delete).WithIsInline(true));
+
+            await ReplyAsync($"The command `{cmd.Command}` has been created!", embed: em.Build());
+        }
     }
 }
