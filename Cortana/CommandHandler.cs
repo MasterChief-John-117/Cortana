@@ -18,7 +18,7 @@ namespace Cortana
         private IServiceProvider _map;
         public static Configuration _config = new Configuration();
 
-        public List<CustomCommand> CustomCommands = JsonConvert.DeserializeObject<List<CustomCommand>>(File.ReadAllText("files/customCommands.json"));
+        public static List<CustomCommand> CustomCommands = JsonConvert.DeserializeObject<List<CustomCommand>>(File.ReadAllText("files/customCommands.json"));
         
         public async Task Install(IServiceProvider map)
         {
