@@ -49,3 +49,15 @@ Temporary Items
 # My custom stuff
 *.*ml*
 *cache
+*.nupkg
+*._
+*.dll
+*TemporaryGen*
+*.txt
+*.md
+*.ps1
+*.config
+packages/Microsoft.NETCore.Platforms.1.1.0/runtime.json
+*.suo
+[Bb]in
+[Oo]bj
