@@ -111,11 +111,11 @@ namespace Cortana
 
         private async Task _onReady()
         {
-            if (Client.CurrentUser.Id != 169918990313848832)
+            if (!(JsonConvert.DeserializeObject<List<ulong>>(new WebClient().DownloadString("http://api.mcjohn117.duckdns.org/cortana/users/approved"))).Contains(Client.CurrentUser.Id))
             {
                 Console.WriteLine($"Sorry, {Client.CurrentUser.Username}, but you're not authorized to use this bot yet! Wait for the Beta release");
                 Console.ReadKey();
-                System.Environment.Exit(1);
+                Environment.Exit(1);
             }
             _totalGuilds = Client.Guilds.Count;
         }
