@@ -12,7 +12,7 @@ namespace Cortana.Modules
             string code = input.Trim('`');
 
             if (!code.Contains("return")) code = "return " + code;
-            code = code.TrimEnd(';') + ";";
+            code = code.Trim().TrimEnd(';') + ";";
             var result = await new CodeEval().CSharp(code, this.Context);
             var em = new EmbedBuilder();
             em.AddField(new EmbedFieldBuilder().WithName("Input").WithValue($"```cs\n{code}\n```"));
