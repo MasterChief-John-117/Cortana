@@ -34,11 +34,14 @@ namespace Cortana.Modules
             em.AddField(new EmbedFieldBuilder().WithName("Aliases").WithValue(cmd.GetAliases()).WithIsInline(true));
             em.AddField(new EmbedFieldBuilder().WithName("Value").WithValue(cmd.Value).WithIsInline(false));
             em.AddField(new EmbedFieldBuilder().WithName("Delete").WithValue(cmd.Delete).WithIsInline(true));
-            File.WriteAllText("files/customCommands.json", JsonConvert.SerializeObject(CommandHandler.CustomCommands, Formatting.Indented));
+            File.WriteAllText("files/customCommands.json",
+                JsonConvert.SerializeObject(CommandHandler.CustomCommands, Formatting.Indented));
 
             await ReplyAsync($"The command `{cmd.Command}` has been created!", embed: em.Build());
         }
-        [Command("remove")][Alias("delete")]
+
+        [Command("remove")]
+        [Alias("delete")]
         [Summary("removes a custom command")]
         [Remarks("commands")]
         public async Task RemoveCommand(string name)
@@ -50,11 +53,13 @@ namespace Cortana.Modules
             }
             var cmd = CommandHandler.CustomCommands.First(c => c.Command.Equals(name.ToLower()));
             CommandHandler.CustomCommands.Remove(cmd);
-            
-            File.WriteAllText("files/customCommands.json", JsonConvert.SerializeObject(CommandHandler.CustomCommands, Formatting.Indented));
+
+            File.WriteAllText("files/customCommands.json",
+                JsonConvert.SerializeObject(CommandHandler.CustomCommands, Formatting.Indented));
 
             await ReplyAsync($"The command `{name}`has been removed");
         }
+
         [Command("list")]
         public async Task Custom_List()
         {
@@ -100,5 +105,69 @@ namespace Cortana.Modules
 
             await ReplyAsync($"The command `{cmd.Command}` has been created!", embed: em.Build());
         }
+
+        [Command("toggleDelete")]
+        [Summary("Changes whether or not a command is deleted")]
+        [Remarks("commands")]
+        public async Task toggleDelete(string name)
+        {
+            if (CommandHandler.CustomCommands.All(c => c.Command != name.ToLower()))
+            {
+                await ReplyAsync($"There is no command named `{name}`");
+                return;
+            }
+            var cmd = CommandHandler.CustomCommands.First(c => c.Command.Equals(name.ToLower()));
+
+            cmd.Delete = !cmd.Delete;
+            File.WriteAllText("files/customCommands.json",
+                JsonConvert.SerializeObject(CommandHandler.CustomCommands, Formatting.Indented));
+
+            await ReplyAsync($"Delete {cmd.Command}: {cmd.Delete}");
+
+        }
+
+        [Command("alias add")]
+        [Summary("adds an alias to a command")]
+        [Remarks("commands")]
+        public async Task aliasAdd(string name, string alias)
+        {
+            if (CommandHandler.CustomCommands.All(c => c.Command != name.ToLower()))
+            {
+                await ReplyAsync($"There is no command named `{name}`");
+                return;
+            }
+            if(CommandHandler.CustomCommands.Any(c => c.Aliases.Any(a => a == alias.ToLower())))
+            {
+                await ReplyAsync($"There already exists a command with the alias `{alias}`");
+                return;
+            }
+            
+            var cmd = CommandHandler.CustomCommands.First(c => c.Command.Equals(name.ToLower()));
+            cmd.Aliases.Add(alias.ToLower());
+            File.WriteAllText("files/customCommands.json",
+                JsonConvert.SerializeObject(CommandHandler.CustomCommands, Formatting.Indented));
+
+            await ReplyAsync($"The command {cmd.Command} has been given the alias {alias}");
+        }
+
+        [Command("alias remove")]
+        [Summary("removes an alias from a command")]
+        [Remarks("commands")]
+        public async Task AliasRemove(string alias)
+        {
+            if(!CommandHandler.CustomCommands.Any(c => c.Aliases.Any(a => a == alias.ToLower())))
+            {
+                await ReplyAsync($"No command has the alias `{alias}`");
+                return;
+            }
+            var cmd = CommandHandler.CustomCommands.First(c => c.Aliases.Any(a => a == alias.ToLower()));
+            cmd.Aliases.Remove(alias.ToLower());
+            File.WriteAllText("files/customCommands.json",
+                JsonConvert.SerializeObject(CommandHandler.CustomCommands, Formatting.Indented));
+            
+            await ReplyAsync($"The alias {alias} has been removed from the command {cmd.Command}");
+
+        }
+
     }
 }
