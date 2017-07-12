@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Cortana.Utilities;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
@@ -45,7 +46,12 @@ namespace Cortana
             if (message == null) return;
             // Mark where the prefix ends and the command begins
             int argPos = 0;
-                        
+            
+            if (_config.GuildSuppressionList.Contains(new CommandContext(_client, message).Guild.Id) 
+                && parameterMessage.MentionedRoles.Intersect((new CommandContext(_client, message).Guild.GetCurrentUserAsync().Result as SocketGuildUser).Roles).Any())
+            {
+                await new HackyAfUtils().Acknowledge(_config, new CommandContext(_client, message));
+            }
             //VERY IMPORTANT: Return if the message is not by the Bot Owner
             //Not doing this allows anyone to execute our commands, which
             //will get Discord to ban us very quickly
