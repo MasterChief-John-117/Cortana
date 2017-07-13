@@ -47,7 +47,7 @@ namespace Cortana
             // Mark where the prefix ends and the command begins
             int argPos = 0;
             
-            if (_config.GuildSuppressionList.Contains(new CommandContext(_client, message).Guild.Id) 
+            if (!(parameterMessage.Channel is SocketDMChannel) && _config.GuildSuppressionList.Contains(new CommandContext(_client, message).Guild.Id) 
                 && parameterMessage.MentionedRoles.Intersect((new CommandContext(_client, message).Guild.GetCurrentUserAsync().Result as SocketGuildUser).Roles).Any())
             {
                 await new HackyAfUtils().Acknowledge(_config, new CommandContext(_client, message));
