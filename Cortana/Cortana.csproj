@@ -89,6 +89,7 @@
     <Compile Include="ConfigurationBuilder.cs" />
     <Compile Include="Modules\ConfigModule.cs" />
     <Compile Include="Modules\CustomCommandModule.cs" />
+    <Compile Include="Modules\EmoteModule.cs" />
     <Compile Include="Modules\HackyAfModule.cs" />
     <Compile Include="Modules\EvalModule.cs" />
     <Compile Include="Modules\HelpModule.cs" />
