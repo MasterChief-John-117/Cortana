@@ -1,8 +1,13 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
+using Newtonsoft.Json;
 
 namespace Cortana.Modules
 {
@@ -27,6 +32,31 @@ namespace Cortana.Modules
                 em.AddField(new EmbedFieldBuilder().WithName(guild.Name).WithValue(guildEmotes).WithIsInline(guild.Name.Length < 27));
             }
             await ReplyAsync("", embed: em.Build());
+        }
+
+        [Command("postEmote")][Alias("postEmoji")]
+        public async Task PostEmote(string name, [Optional, Remainder] string msg)
+        {
+            await Context.Message.DeleteAsync();
+            var regex = new Regex(name, RegexOptions.IgnoreCase);
+            var emote = Context.Client.GetGuildsAsync().Result.First(g =>
+                g.Emotes.Any(e => !e.IsManaged && regex.IsMatch(e.Name.ToLower())))
+                .Emotes.First(e => !e.IsManaged && regex.IsMatch(e.Name.ToLower()));
+            new WebClient().DownloadFile($"https://cdn.discordapp.com/emojis/{emote.Id}.png", "files/tempEmote.png");
+            await Context.Channel.SendFileAsync("files/tempEmote.png", msg);
+        }
+
+        [Command("indexEmotes")]
+        [Alias("index emoji")]
+        public async Task indexEmotes()
+        {
+            List<GuildEmote> emotes = new List<GuildEmote>();
+            foreach (var guild in Context.Client.GetGuildsAsync().Result)
+            {
+                emotes.AddRange(guild.Emotes.ToList());
+            }
+            File.WriteAllText("files/emoteIndex.json", JsonConvert.SerializeObject(emotes, Formatting.Indented));
+            await Context.Channel.SendFileAsync("files/emoteIndex.json", $"`{emotes.Count}` emotes indexed!");
         }
     }
 }
