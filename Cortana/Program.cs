@@ -30,12 +30,7 @@ namespace Cortana
         private string upToDate;
         public static void Main(string[] args)
         {
-            if (args.Any() && args[0].Equals("disconnected"))
-            {
-                Console.WriteLine("It died, but at least this worked!");
-            }
-            else new Program().Start().GetAwaiter().GetResult();
-                
+            new Program().Start().GetAwaiter().GetResult();    
         }
 
         public async Task Start()
