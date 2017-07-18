@@ -87,28 +87,23 @@
     <Compile Include="CommandHandler.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="ConfigurationBuilder.cs" />
+    <Compile Include="Modules\LennyModule.cs" />
     <Compile Include="Modules\ConfigModule.cs" />
     <Compile Include="Modules\CustomCommandModule.cs" />
     <Compile Include="Modules\EmoteModule.cs" />
     <Compile Include="Modules\HackyAfModule.cs" />
     <Compile Include="Modules\EvalModule.cs" />
-    <Compile Include="Modules\HalpModule.cs" />
     <Compile Include="Modules\HelpModule.cs" />
     <Compile Include="Modules\ServerModule.cs" />
     <Compile Include="Modules\WebModule.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\HackyAfUtils.cs" />
+    <Compile Include="Utilities\UserUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Paginator\Paginator.csproj">
-      <Project>{ccfdfab8-5997-4304-afb6-ef4278b09533}</Project>
-      <Name>Paginator</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
