@@ -14,6 +14,7 @@ using Discord.Commands;
 using Discord.Net;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
+using Paginator;
 
 namespace Cortana
 {
@@ -25,7 +26,7 @@ namespace Cortana
         private int _totalGuilds;
         private  Stopwatch _stopwatch = new Stopwatch();
 
-        private string currentVer = "0.1.54";
+        private string currentVer = "0.1.61";
         private string newestVer = new WebClient().DownloadString("http://api.mcjohn117.duckdns.org/cortana/latest").Trim();
         private string upToDate;
         public static void Main(string[] args)
@@ -54,7 +55,7 @@ namespace Cortana
             Client = new DiscordSocketClient(new DiscordSocketConfig
             {
                 LogLevel = LogSeverity.Verbose, //for most debug, Verbose. For normal use, Crit is fine
-                AlwaysDownloadUsers = false
+                AlwaysDownloadUsers = true
             });
             Client.Log += Log;
 
@@ -97,9 +98,10 @@ namespace Cortana
                 .AddSingleton(Client)
                 .AddSingleton(new CommandService(new CommandServiceConfig
                 {
-                    CaseSensitiveCommands = false, 
+                    CaseSensitiveCommands = false,
                     ThrowOnError = false
                 }));
+                //.AddPaginator(Client, Log);
             var provider = new DefaultServiceProviderFactory().CreateServiceProvider(services);
             return provider;
         }
@@ -134,7 +136,7 @@ namespace Cortana
                 Console.Clear();
                 Console.WriteLine(sb.ToString());
             }
-            //else Console.WriteLine(msg);
+//            Console.WriteLine(msg);
             return Task.FromResult(0);
         }
     }
