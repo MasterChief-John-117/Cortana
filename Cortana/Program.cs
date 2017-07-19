@@ -14,7 +14,6 @@ using Discord.Commands;
 using Discord.Net;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
-using Paginator;
 
 namespace Cortana
 {
@@ -55,7 +54,7 @@ namespace Cortana
             Client = new DiscordSocketClient(new DiscordSocketConfig
             {
                 LogLevel = LogSeverity.Verbose, //for most debug, Verbose. For normal use, Crit is fine
-                AlwaysDownloadUsers = true
+                AlwaysDownloadUsers = false
             });
             Client.Log += Log;
 
@@ -135,8 +134,9 @@ namespace Cortana
                 sb.Append($" {{{Client.Guilds.Sum(x => x.Users.Count())} users}}");
                 Console.Clear();
                 Console.WriteLine(sb.ToString());
+                Console.WriteLine(msg.ToString().Replace(" Gateway    ", ""));
             }
-//            Console.WriteLine(msg);
+            //Console.WriteLine(msg);
             return Task.FromResult(0);
         }
     }

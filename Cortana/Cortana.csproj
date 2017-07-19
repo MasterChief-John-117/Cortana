@@ -87,6 +87,7 @@
     <Compile Include="CommandHandler.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="ConfigurationBuilder.cs" />
+    <Compile Include="Modules\ChatModule.cs" />
     <Compile Include="Modules\LennyModule.cs" />
     <Compile Include="Modules\ConfigModule.cs" />
     <Compile Include="Modules\CustomCommandModule.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="Modules\EvalModule.cs" />
     <Compile Include="Modules\HelpModule.cs" />
     <Compile Include="Modules\ServerModule.cs" />
+    <Compile Include="Modules\UserModule.cs" />
     <Compile Include="Modules\WebModule.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
