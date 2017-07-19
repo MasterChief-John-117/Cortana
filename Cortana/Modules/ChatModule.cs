@@ -24,8 +24,10 @@ namespace Cortana.Modules
             {
                 await m.DeleteAsync();
             }
-            var msg = await ReplyAsync($"Deleted `{enumerable.Count()}` messages!\n_\\*This message will self-destruct in 5 seconds*_");
-            await Task.Delay(5000);
+            var msg = await ReplyAsync($"Deleted `{enumerable.Count() - 1}` messages!\n_\\*This message will self-destruct in 5 seconds*_");
+            await Task.Delay(4000);
+            await msg.ModifyAsync(m => m.Content = "**BOOM!**");
+            await Task.Delay(1000);
             await msg.DeleteAsync();
         }
     }
