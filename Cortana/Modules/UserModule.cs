@@ -15,6 +15,7 @@ namespace Cortana.Modules
             var result = new UserUtils().FindUserFromString(Program.Client, user);
             if (result.Sum(m => m.Length) < 1950)
             {
+                string delim = "\n";
                 await Context.Message.ModifyAsync(msg => msg.Content = (result.Aggregate((i, j) => i + delim + j)));
             }
             else
