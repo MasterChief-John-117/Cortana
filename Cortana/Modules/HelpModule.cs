@@ -95,7 +95,8 @@ namespace Cortana.Modules
         [Command("halp")]
         public async Task Halp(string command = "")    
         {
-            var commandList = CommandHandler._commands.Commands.Where(cmd => Regex.IsMatch(cmd.Name, command, RegexOptions.IgnoreCase));
+            var commandList = CommandHandler._commands.Commands.Where(cmd => Regex.IsMatch(cmd.Name, command, RegexOptions.IgnoreCase)).Where(cmd => string.IsNullOrEmpty(cmd.Remarks)
+                                                                                                                                                           || !cmd.Remarks.Contains("no-help"));
             EmbedBuilder em = new EmbedBuilder();
             em.WithTitle(string.IsNullOrEmpty(command) ? "Commands" : $"Commands matching {command} ({commandList.Count()})");
             if(commandList.Count() > 5) em.WithDescription(string.Join(", ", commandList.Select(cmd => cmd.Name).ToList()));
