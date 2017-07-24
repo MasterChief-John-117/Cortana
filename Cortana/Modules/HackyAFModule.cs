@@ -9,7 +9,7 @@ namespace Cortana.Modules
     public class HackyAFModule : ModuleBase
     {
         [Command("suppressRoleMentions")]
-        [Summary("Supresses role mentions for a given guild")]
+        [Summary("Supresses role mentions for a given guild")][Remarks("no-help")]
         public async Task AddGuildRoleSuppression(ulong guildId)
         {
             var guild = Context.Client.GetGuildAsync(guildId).Result;
@@ -20,6 +20,7 @@ namespace Cortana.Modules
         }
         [Command("removesuppressRoleMentions")]
         [Summary("Supresses role mentions for a given guild")]
+        [Remarks("no-help")]
         public async Task RemoveGuildRoleSuppression(ulong guildId)
         {
             var guild = Context.Client.GetGuildAsync(guildId).Result;
