@@ -15,6 +15,8 @@ namespace Cortana
     public class CommandHandler
     {        
         public static CommandService _commands;
+        public int Iterator;
+        
         private DiscordSocketClient _client;
         private IServiceProvider _map;
         public static Configuration _config = new Configuration();
