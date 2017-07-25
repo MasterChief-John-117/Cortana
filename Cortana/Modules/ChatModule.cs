@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Cortana.Utilities;
 using Discord;
 using Discord.Commands;
+using MarkVSharp;
 
 namespace Cortana.Modules
 {
@@ -29,6 +33,18 @@ namespace Cortana.Modules
             await msg.ModifyAsync(m => m.Content = "**BOOM!**");
             await Task.Delay(1000);
             await msg.DeleteAsync();
+        }
+
+        [Command("markov")][Summary("Markov chain generator for the channel\nOptions: [messages to grab] {minimum word count}")]
+        public async Task ChatMarkov([Remainder] string options = "[300] {5}")
+        {
+            await Context.Message.DeleteAsync();
+            int fetch = (Regex.IsMatch(options, @"\[(.+?)\]")) ? Convert.ToInt32(Regex.Matches(options, @"\[(.+?)\]")[0].Groups[1].Value) : 100;
+            int minLength = (Regex.IsMatch(options, @"\{(.+?)\}")) ? Convert.ToInt32(Regex.Matches(options, @"\{(.+?)\}")[0].Groups[1].Value) : 5;
+            
+            var markovGenerator = new MarkovGenerator(Context.Channel.GetMessagesAsync(fetch).Flatten().Result.Reverse().Select(msg => msg.Content).Aggregate((i, j) => i + " " + j));
+
+            await ReplyAsync(markovGenerator.GenerateSentence(minLength));
         }
     }
 }

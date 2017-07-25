@@ -23,7 +23,7 @@ namespace MarkVSharp
 		/// <summary>
 		/// Max length of a sentence 
 		/// </summary>
-		public const int MAX_SENTENCE_LENGTH = 50 ;
+		public const int MAX_SENTENCE_LENGTH = 200 ;
 		
 		/// <summary>
 		/// Default minimum number of non punctuation words in a sentence
