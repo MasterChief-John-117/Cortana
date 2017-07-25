@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -172,6 +173,32 @@ namespace Cortana.Modules
                 em.AddField(kvp.Key, kvp.Value);
             }
             await ReplyAsync("", embed: em.Build());
+        }
+        [Command("inviteInfo")]
+        public async Task GetInviteInfo(string code)
+        {
+            string inviteLink;
+            var regex = new Regex(@"(?:discord(?:\.gg|app\.com\/invite)\/(?<id>([\w]{16}|(?:[\w]+-?){3})))");
+            if (regex.Matches(code).Count > 0) inviteLink = regex.Matches(code)[0].Value;
+            else inviteLink = code;
+            IInvite invite;
+
+            try
+            {
+                invite = Context.Client.GetInviteAsync(inviteLink).Result;var em = new EmbedBuilder();
+                em.WithAuthor(new EmbedAuthorBuilder().WithName(invite.Code).WithUrl(invite.Url));
+                em.AddInlineField("Guild", invite.GuildName);
+                em.AddInlineField("Channel", invite.Channel);
+                em.Footer = new EmbedFooterBuilder().WithText(invite.Id);
+                await ReplyAsync("", embed: em.Build());
+            }
+            catch (Exception ex)
+            {
+                await ReplyAsync("",
+                    embed: new EmbedBuilder().WithAuthor(new EmbedAuthorBuilder().WithName(inviteLink)).WithDescription("The invite is expired").Build());
+            }
+
+            
         }
     }
 }
