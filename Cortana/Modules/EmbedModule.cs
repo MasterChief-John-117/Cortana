@@ -22,6 +22,7 @@ namespace Cortana.Modules
             await Context.Message.DeleteAsync();
             string title = Regex.Match(input, @"\[([^)]*)\]").Groups[1].Value;
             string text = Regex.Match(input, @"\(([^)]*)\)").Groups[1].Value;
+            if (!input.Contains("(")) text = input;    
 
             var em = new EmbedBuilder();
             em.WithDescription(text);
@@ -40,6 +41,8 @@ namespace Cortana.Modules
             await Context.Message.DeleteAsync();
             string title = Regex.Match(input, @"\[([^)]*)\]").Groups[1].Value;
             string link = Regex.Match(input, @"\(([^)]*)\)").Groups[1].Value;
+            if (!input.Contains("(")) link = input;    
+            
             var cmd = new CommandHandler();
         
             new WebClient().DownloadFile(new Uri(link), "files/tempImg.png");

@@ -102,7 +102,6 @@
     <Compile Include="Modules\WebModule.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utilities\ChannelUtils.cs" />
     <Compile Include="Utilities\HackyAfUtils.cs" />
     <Compile Include="Utilities\ImageUtils.cs" />
     <Compile Include="Utilities\UserUtils.cs" />
@@ -116,6 +115,13 @@
       <Project>{ea91ea44-eb92-44ce-be29-355877abea9f}</Project>
       <Name>MarkVSharp</Name>
     </ProjectReference>
+    <ProjectReference Include="..\UrbanDictionary\UrbanDictionary.csproj">
+      <Project>{851d17d6-3771-485a-9591-36a3ca1c27d0}</Project>
+      <Name>UrbanDictionary</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ReadmePleaseIfPossible.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

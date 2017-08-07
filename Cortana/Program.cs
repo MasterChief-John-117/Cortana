@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Mime;
+using System.Timers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,6 +14,7 @@ using Discord.Commands;
 using Discord.Net;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
+using Timer = System.Timers.Timer;
 
 namespace Cortana
 {
@@ -25,11 +26,27 @@ namespace Cortana
         private int _totalGuilds;
         private  Stopwatch _stopwatch = new Stopwatch();
 
-        private string currentVer = "0.1.61";
+        private string currentVer = "0.1.80";
         private string newestVer = new WebClient().DownloadString("http://api.mcjohn117.duckdns.org/cortana/latest").Trim();
         private string upToDate;
+
+
+        private static Timer getMemoryAndLog;
+        private static Timer cleanMemory;
         public static void Main(string[] args)
         {
+            getMemoryAndLog = new Timer();
+            getMemoryAndLog.AutoReset = true;
+            getMemoryAndLog.Interval = 60000;
+            getMemoryAndLog.Elapsed += LogMemory;
+            getMemoryAndLog.Start();
+            
+            cleanMemory = new Timer();
+            cleanMemory.AutoReset = true;
+            cleanMemory.Interval = 60000;
+            cleanMemory.Elapsed += CleanMemory;
+            cleanMemory.Start();
+
             new Program().Start().GetAwaiter().GetResult();    
         }
 
@@ -132,12 +149,23 @@ namespace Cortana
                 sb.Append($" ({_loadedGuilds}/{_totalGuilds})");
                 sb.Append($" [{_stopwatch.ElapsedMilliseconds/1000}s]");
                 sb.Append($" {{{Client.Guilds.Sum(x => x.Users.Count())} users}}");
+                sb.AppendLine($"\n{Math.Round(GC.GetTotalMemory(true) / (1024.0), 2)}kb");
                 Console.Clear();
                 Console.WriteLine(sb.ToString());
                 Console.WriteLine(msg.ToString().Replace(" Gateway    ", ""));
             }
             //Console.WriteLine(msg);
             return Task.FromResult(0);
+        }
+
+        private static void LogMemory(object source, ElapsedEventArgs e)
+        {
+            string str = $"{DateTime.Now}: {Math.Round(GC.GetTotalMemory(true) / (1024.0 * 1024.0), 2)}mb";
+            Console.WriteLine(str);
+        }
+        private static void CleanMemory(object source, ElapsedEventArgs e)
+        {
+            GC.Collect();
         }
     }
 }

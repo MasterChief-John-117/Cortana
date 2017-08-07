@@ -29,8 +29,8 @@ namespace Cortana.Modules
             await Context.Message.DeleteAsync();
             
             var em = new EmbedBuilder();
-            em.WithTitle($"Info About you and the Cortana Self-Bot");
-            em.WithAuthor(new EmbedAuthorBuilder().WithName($"Bot Author: MasterChief_John-117").WithIconUrl("https://mcjohn117.duckdns.org/images/MCUSFlags.jpg"));
+            em.WithTitle("Info About you and the Cortana Self-Bot");
+            em.WithAuthor(new EmbedAuthorBuilder().WithName("Bot Author: MasterChief_John-117").WithIconUrl("https://mcjohn117.duckdns.org/images/MCUSFlags.jpg"));
             em.WithColor(new Color(41, 82, 145));
             em.WithImageUrl(Context.User.GetAvatarUrl());
             em.WithCurrentTimestamp();
@@ -75,6 +75,12 @@ namespace Cortana.Modules
             
             
             await ReplyAsync("", embed: em);
+        }
+
+        [Command("cleanup")]
+        public async Task Cleanup1()
+        {
+            GC.Collect();
         }
     }
 }
