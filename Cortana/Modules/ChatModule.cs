@@ -85,5 +85,7 @@ namespace Cortana.Modules
             File.Delete("files/" + filename);
             msgs.ToList().Clear();
         }
+        [Command("pingRole")][Alias("mention")]
+        }
     }
 }
