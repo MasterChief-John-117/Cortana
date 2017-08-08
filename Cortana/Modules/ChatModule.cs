@@ -46,5 +46,44 @@ namespace Cortana.Modules
 
             await ReplyAsync(markovGenerator.GenerateSentence(minLength));
         }
+        [Command("archive")]
+        public async Task GetMessages(ulong channelId = 0)
+        {
+            if (channelId == 0)
+            {
+                channelId = Context.Channel.Id;
+            }
+            var channel = Context.Client.GetChannelAsync(channelId).Result;
+            var msgs = (channel as IMessageChannel).GetMessagesAsync().Flatten().Result;
+
+            while (true)
+            {
+                var newmsgs = (channel as IMessageChannel).GetMessagesAsync(msgs.Last(), Direction.Before).Flatten().Result;
+                msgs = msgs.Concat(newmsgs);
+                Console.WriteLine(msgs.Count());
+                if(newmsgs.Count() < 100) break;
+            }
+
+            string str = $"{(channel as IGuildChannel).Guild.Name} | {(channel as IGuildChannel).Guild.Id}\n";
+            str += $"{channel.Name} | {channel.Id}\n";
+            str += $"{DateTime.Now}\n\n";    
+            foreach (var msg in msgs.Reverse())
+            {
+                string msgstr = "";
+                msgstr += $"{msg.Author} | {msg.Author.Id}\n";
+                msgstr += $"{msg.Timestamp}\n";
+                msgstr += $"{msg.Content}\n";
+                foreach (var a in msg.Attachments)
+                {
+                    msgstr += $"{a.Url}\n";
+                }
+                str += msgstr + "\n";
+            }
+            string filename = $"{channel.Name}.txt";
+            File.WriteAllText("files/" + filename, str);
+            await Context.Channel.SendFileAsync("files/" + filename, $"Here you go! I saved {msgs.Count()} messages");
+            File.Delete("files/" + filename);
+            msgs.ToList().Clear();
+        }
     }
 }
