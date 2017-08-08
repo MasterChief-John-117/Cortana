@@ -86,6 +86,23 @@ namespace Cortana.Modules
             msgs.ToList().Clear();
         }
         [Command("pingRole")][Alias("mention")]
+        [RequireUserPermission(GuildPermission.ManageRoles)]
+        public async Task Server_Ping(string roleName, [Remainder] string message)
+        {
+            try
+            {
+                await Context.Message.DeleteAsync();
+                var role = (Context.Guild as SocketGuild).Roles.First(
+                    r => r.Name.ToLower().Contains(roleName.ToLower()));
+                bool original = role.IsMentionable;
+                await role.ModifyAsync(r => r.Mentionable = true);
+                await ReplyAsync(message.Replace(roleName, role.Mention));
+                await role.ModifyAsync(r => r.Mentionable = original);
+            }
+            catch (Exception ex)
+            {
+                await ReplyAsync(ex.Message);
+            }
         }
     }
 }
