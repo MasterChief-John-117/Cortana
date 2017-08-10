@@ -25,11 +25,11 @@ namespace Cortana
         private int _loadedGuilds = 0;
         private int _totalGuilds;
         private  Stopwatch _stopwatch = new Stopwatch();
+        private WebClient sWClient = new WebClient();
 
         private string currentVer = "0.1.80";
-        private string newestVer = new WebClient().DownloadString("http://api.mcjohn117.duckdns.org/cortana/latest").Trim();
+        private string newestVer;
         private string upToDate;
-
 
         private static Timer getMemoryAndLog;
         private static Timer cleanMemory;
@@ -37,13 +37,13 @@ namespace Cortana
         {
             getMemoryAndLog = new Timer();
             getMemoryAndLog.AutoReset = true;
-            getMemoryAndLog.Interval = 60000;
+            getMemoryAndLog.Interval = 60 * 1000;
             getMemoryAndLog.Elapsed += LogMemory;
             getMemoryAndLog.Start();
             
             cleanMemory = new Timer();
             cleanMemory.AutoReset = true;
-            cleanMemory.Interval = 60000;
+            cleanMemory.Interval = 1000 * 60;
             cleanMemory.Elapsed += CleanMemory;
             cleanMemory.Start();
 
@@ -52,6 +52,7 @@ namespace Cortana
 
         public async Task Start()
         {
+            newestVer = sWClient.DownloadString("http://api.mcjohn117.duckdns.org/cortana/latest").Trim();
             upToDate = currentVer == newestVer ? $"Cortana is up to date! {currentVer}" : $"Cortana is out of date ({currentVer} < {newestVer})";
             //Make sure we have valid files
             if (!Directory.Exists("files")) Directory.CreateDirectory("files");
@@ -93,12 +94,6 @@ namespace Cortana
 
             Client.Ready += _onReady;
 
-            Client.Disconnected += exception =>
-            {
-                Main(new string[] {"disconnected"});
-                return Task.FromResult(1);
-            }; 
-            
             var serviceProvider = ConfigureServices();
 
             var _handler = new CommandHandler();
@@ -163,9 +158,15 @@ namespace Cortana
             string str = $"{DateTime.Now}: {Math.Round(GC.GetTotalMemory(true) / (1024.0 * 1024.0), 2)}mb";
             Console.WriteLine(str);
         }
-        private static void CleanMemory(object source, ElapsedEventArgs e)
+        private static async void CleanMemory(object source, ElapsedEventArgs e)
         {
             GC.Collect();
+            if (Math.Round(GC.GetTotalMemory(true) / (1024.0 * 1024.0), 2) > 1024)
+            {
+                await Client.LogoutAsync();
+                Client.Dispose();
+                Main(null);
+            }
         }
     }
 }
