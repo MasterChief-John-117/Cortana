@@ -119,12 +119,12 @@ namespace Cortana
 
         private async Task _onReady()
         {
-            if (!(JsonConvert.DeserializeObject<List<ulong>>(new WebClient().DownloadString("http://api.mcjohn117.duckdns.org/cortana/users/approved"))).Contains(Client.CurrentUser.Id))
+            /*if (!(JsonConvert.DeserializeObject<List<ulong>>(new WebClient().DownloadString("http://api.mcjohn117.duckdns.org/cortana/users/approved"))).Contains(Client.CurrentUser.Id))
             {
                 Console.WriteLine($"Sorry, {Client.CurrentUser.Username}, but you're not authorized to use this bot yet! Wait for the Beta release");
                 Console.ReadKey();
                 Environment.Exit(1);
-            }
+            }*/
             _totalGuilds = Client.Guilds.Count;
         }
         
@@ -156,7 +156,7 @@ namespace Cortana
         private static void LogMemory(object source, ElapsedEventArgs e)
         {
             string str = $"{DateTime.Now}: {Math.Round(GC.GetTotalMemory(true) / (1024.0 * 1024.0), 2)}mb";
-            Console.WriteLine(str);
+            //Console.WriteLine(str);
         }
         private static async void CleanMemory(object source, ElapsedEventArgs e)
         {
