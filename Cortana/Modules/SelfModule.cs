@@ -22,6 +22,6 @@ namespace Cortana.Modules
                 await (Context.Client as DiscordSocketClient).SetGameAsync("");
                 await ReplyAsync("Game has been cleared");
             }
-    }
+        }
     }
 }

@@ -97,6 +97,7 @@
     <Compile Include="Modules\HackyAfModule.cs" />
     <Compile Include="Modules\EvalModule.cs" />
     <Compile Include="Modules\HelpModule.cs" />
+    <Compile Include="Modules\SelfModule.cs" />
     <Compile Include="Modules\ServerModule.cs" />
     <Compile Include="Modules\UserModule.cs" />
     <Compile Include="Modules\WebModule.cs" />
