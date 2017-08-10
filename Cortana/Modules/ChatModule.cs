@@ -1,11 +1,14 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Cortana.Utilities;
 using Discord;
 using Discord.Commands;
+using Discord.WebSocket;
 using MarkVSharp;
 
 namespace Cortana.Modules
@@ -42,7 +45,8 @@ namespace Cortana.Modules
             int fetch = (Regex.IsMatch(options, @"\[(.+?)\]")) ? Convert.ToInt32(Regex.Matches(options, @"\[(.+?)\]")[0].Groups[1].Value) : 100;
             int minLength = (Regex.IsMatch(options, @"\{(.+?)\}")) ? Convert.ToInt32(Regex.Matches(options, @"\{(.+?)\}")[0].Groups[1].Value) : 5;
             
-            var markovGenerator = new MarkovGenerator(Context.Channel.GetMessagesAsync(fetch).Flatten().Result.Reverse().Select(msg => msg.Content).Aggregate((i, j) => i + " " + j));
+            var markovGenerator = new MarkovGenerator(Context.Channel.GetMessagesAsync(fetch).Flatten().Result.Reverse().Select(msg => msg.Content).Aggregate((i, j) => i + ". " + j));
+            //var markovGenerator = new MarkovGenerator(new ChannelUtils().GetMessagesHugeAsync(Context.Channel, fetch).Result.Select(msg => msg.Content).Aggregate((i, j) => i + " " + j));
 
             await ReplyAsync(markovGenerator.GenerateSentence(minLength));
         }
@@ -103,6 +107,15 @@ namespace Cortana.Modules
             {
                 await ReplyAsync(ex.Message);
             }
+        }
+
+        [Command("repeat")]
+        [Alias("re")]
+        public async Task RepeatLastMessage()
+        {
+            await Context.Message.DeleteAsync();
+            var msg = Context.Channel.GetMessagesAsync(1).Flatten().Result.First();
+            await ReplyAsync(msg.Content);
         }
     }
 }
