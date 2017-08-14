@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
+using xkcd;
 
 namespace Cortana.Modules
 {
@@ -17,6 +18,31 @@ namespace Cortana.Modules
             {
                 await ReplyAsync($"{client.DownloadString(url)}");
             }
+        }
+
+        [Command("xkcd")]
+        [Summary("Try to retrun the most relevant xkcd comic given a number or string")]
+        public async Task Web_XKCD([Remainder] string input)
+        {
+            int number;
+            xkcdComic comic;
+            if (int.TryParse(input, out number))
+            {
+                if (number > 404) number--;
+                comic = new xkcdComicStore().ComicList.ElementAt(number - 1);
+            }
+            else
+            {
+                comic = new xkcdComicStore().ComicList.Last(c => c.title.ToLower().Contains(input.ToLower()));
+            }
+
+            var em = new EmbedBuilder();
+            em.WithTitle($"{comic.num}: {comic.title}");
+            em.WithImageUrl(comic.img);
+            em.WithDescription(comic.alt);
+            em.WithColor(new Color(0,0,0));
+
+            await ReplyAsync("", embed: em.Build());
         }
 
         [Command("ud")]

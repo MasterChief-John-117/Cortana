@@ -15,6 +15,7 @@ using Discord.Net;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using Timer = System.Timers.Timer;
+using xkcd;
 
 namespace Cortana
 {
@@ -27,7 +28,7 @@ namespace Cortana
         private  Stopwatch _stopwatch = new Stopwatch();
         private WebClient sWClient = new WebClient();
 
-        private string currentVer = "0.1.80";
+        private string currentVer = "0.1.93";
         private string newestVer;
         private string upToDate;
 
@@ -46,6 +47,15 @@ namespace Cortana
             cleanMemory.Interval = 1000 * 60;
             cleanMemory.Elapsed += CleanMemory;
             cleanMemory.Start();
+
+            if (!File.Exists("files/xkcd.json"))
+            {
+                File.WriteAllText("files/xkcd.json", JsonConvert.SerializeObject(new xkcdComicStore().create(), Formatting.Indented));
+            }
+            else
+            {
+                File.WriteAllText("files/xkcd.json", JsonConvert.SerializeObject(new xkcdComicStore().update(), Formatting.Indented));
+            }
 
             new Program().Start().GetAwaiter().GetResult();    
         }
