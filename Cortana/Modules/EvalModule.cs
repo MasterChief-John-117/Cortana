@@ -14,6 +14,7 @@ namespace Cortana.Modules
             if (!code.Contains("return")) code = "return " + code;
             code = code.Trim().TrimEnd(';') + ";";
             var result = await new CodeEval().CSharp(code, this.Context);
+            if (result == null) return;
             var em = new EmbedBuilder();
             em.AddField(new EmbedFieldBuilder().WithName("Input").WithValue($"```cs\n{code}\n```"));
             em.AddField(new EmbedFieldBuilder().WithName("Result").WithValue(result));
