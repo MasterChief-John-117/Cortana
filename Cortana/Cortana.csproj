@@ -120,6 +120,10 @@
       <Project>{851d17d6-3771-485a-9591-36a3ca1c27d0}</Project>
       <Name>UrbanDictionary</Name>
     </ProjectReference>
+    <ProjectReference Include="..\xkcd\xkcd.csproj">
+      <Project>{a4322814-9429-4c3f-a24b-117955ad6e08}</Project>
+      <Name>xkcd</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
