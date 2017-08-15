@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using System.Linq;
 
 namespace Cortana.Modules
 {
@@ -19,9 +20,19 @@ namespace Cortana.Modules
             }
             else
             {
-                await (Context.Client as DiscordSocketClient).SetGameAsync("");
+                await (Context.Client as DiscordSocketClient).SetGameAsync(null);
                 await ReplyAsync("Game has been cleared");
             }
+        }
+
+        [Command("streaming")]
+        public async Task SetStreaming([Remainder] string streamInput)
+        {
+            var link = (streamInput.Split(' ').ToList().First(s => System.Uri.IsWellFormedUriString(s, System.UriKind.RelativeOrAbsolute)));
+            var game = streamInput.Split(' ').ToList().SkipWhile(s => s.Equals(link)).Aggregate((a, b) => a + " " + b);
+            await (Context.Client as DiscordSocketClient).SetGameAsync(game, link, StreamType.Twitch);
+
+            await ReplyAsync($"Streaming {game} at <{link}>! *(do {new Configuration().Prefix}game to stop streaming)*");
         }
     }
 }
