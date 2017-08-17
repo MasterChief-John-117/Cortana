@@ -1,15 +1,15 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Drawing;
 using Cortana.Utilities;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using MarkVSharp;
+using System.Net;
 
 namespace Cortana.Modules
 {
@@ -86,6 +86,7 @@ namespace Cortana.Modules
             await ReplyAsync("", embed: emb.Build());
             await ReplyAsync(reply);
         }
+
         [Command("markov")][Summary("Markov chain generator for the channel\nOptions: [messages to grab] {minimum word count}")]
         public async Task ChatMarkov([Remainder] string options = "[300] {5}")
         {

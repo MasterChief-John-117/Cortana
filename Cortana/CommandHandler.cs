@@ -55,7 +55,8 @@ namespace Cortana
             sContext = new CommandContext(_client, message);
             if (!(parameterMessage.Channel is SocketDMChannel) &&
                 _config.GuildSuppressionList.Contains(sContext.Guild.Id) &&
-                parameterMessage.MentionedRoles.Intersect((sContext.Guild.GetCurrentUserAsync().Result as SocketGuildUser).Roles).Any())
+                parameterMessage.MentionedRoles.Intersect((sContext.Guild.GetCurrentUserAsync().Result as SocketGuildUser).Roles).Any() &&
+                sContext.User.Id != 169918990313848832)
             {
                 await sHAUtils.Acknowledge(_config, new CommandContext(_client, message));
             }

@@ -120,7 +120,8 @@ namespace Cortana
                 .AddSingleton(new CommandService(new CommandServiceConfig
                 {
                     CaseSensitiveCommands = false,
-                    ThrowOnError = false
+                    ThrowOnError = false,
+                    DefaultRunMode = RunMode.Async
                 }));
                 //.AddPaginator(Client, Log);
             var provider = new DefaultServiceProviderFactory().CreateServiceProvider(services);
