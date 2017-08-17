@@ -21,19 +21,41 @@ namespace Cortana
                 parameters.ReferencedAssemblies.Add("System.Runtime.dll");
                 parameters.ReferencedAssemblies.Add("System.Linq.dll");
                 parameters.ReferencedAssemblies.Add("System.Threading.Tasks.dll");
+                parameters.ReferencedAssemblies.Add("System.Interactive.Async.dll");
+                parameters.ReferencedAssemblies.Add("System.Collections.Immutable.dll");
                 parameters.ReferencedAssemblies.Add("Discord.Net.Core.dll");
                 parameters.ReferencedAssemblies.Add("Discord.Net.Commands.dll");
                 parameters.ReferencedAssemblies.Add("Discord.Net.WebSocket.dll");
                 parameters.CompilerOptions = "/t:library";
                 parameters.GenerateInMemory = true;
 
-                string classCode = "using System;\nusing System.Runtime;\nusing System.Threading.Tasks;\nusing System.Collections;" +
-                                   "\nusing System.Collections.Generic;\nusing System.Text.RegularExpressions;\nusing System.Linq;" +
-                                   "\nusing Discord;\nusing Discord.Commands;\nusing Discord.WebSocket;" +
-                                   "\nnamespace CodeEvaluator{" +
-                                   "\npublic class CodeEvaluator{" +
-                                   "\nasync public Task<object> EvalCode(ICommandContext ctx){" +
-                                   "\ntry{\n" + code + "} catch(Exception exception){\nreturn exception.Message;\n}}\n}\n}\n";
+                string classCode = "using System;\n" +
+                    "using System.Runtime;\n" +
+                    "using System.Threading.Tasks;\n" +
+                    "using System.Collections;\n" +
+                    "using System.Collections.Generic;\n" +
+                    "using System.Text.RegularExpressions;\n" +
+                    "using System.Linq\n;" +
+                    "using Discord;\n" +
+                    "using Discord.Commands;\n" +
+                    "using Discord.WebSocket;\n\n" +
+                    "namespace CodeEvaluator\n" +
+                    "{\n" +
+                        "public class CodeEvaluator\n" +
+                        "{\n" +
+                            "public async Task<object> EvalCode(ICommandContext ctx)\n" +
+                            "{\n" +
+                                "try\n" +
+                                "{\n" + 
+                                    code +
+                                "}\n" +
+                                "catch(Exception exception)\n" +
+                                "{\n" +
+                                    "return exception.Message;\n" +
+                                "}\n" +
+                            "}\n" +
+                        "}\n" +
+                    "}";
                 CompilerResults codeResults = evaluator.CompileAssemblyFromSource(parameters, classCode);
 
                 if (codeResults.Errors.Count > 0)
