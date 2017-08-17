@@ -76,11 +76,5 @@ namespace Cortana.Modules
             
             await ReplyAsync("", embed: em);
         }
-
-        [Command("cleanup")]
-        public async Task Cleanup1()
-        {
-            GC.Collect();
-        }
     }
 }
