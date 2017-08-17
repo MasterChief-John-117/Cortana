@@ -3,6 +3,8 @@ using System.Net;
 using System.Threading.Tasks;
 using Discord.Commands;
 using Newtonsoft.Json;
+using Cortana.Utilities;
+using System;
 
 namespace Cortana.Modules
 {

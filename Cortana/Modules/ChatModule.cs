@@ -107,36 +107,11 @@ namespace Cortana.Modules
                 channelId = Context.Channel.Id;
             }
             var channel = Context.Client.GetChannelAsync(channelId).Result;
-            var msgs = (channel as IMessageChannel).GetMessagesAsync().Flatten().Result;
 
-            while (true)
-            {
-                var newmsgs = (channel as IMessageChannel).GetMessagesAsync(msgs.Last(), Direction.Before).Flatten().Result;
-                msgs = msgs.Concat(newmsgs);
-                Console.WriteLine(msgs.Count());
-                if(newmsgs.Count() < 100) break;
-            }
+            new ChannelArchiver().FullArchive(channelId, Context.Channel.Id).FireAndForget();
 
-            string str = $"{(channel as IGuildChannel).Guild.Name} | {(channel as IGuildChannel).Guild.Id}\n";
-            str += $"{channel.Name} | {channel.Id}\n";
-            str += $"{DateTime.Now}\n\n";    
-            foreach (var msg in msgs.Reverse())
-            {
-                string msgstr = "";
-                msgstr += $"{msg.Author} | {msg.Author.Id}\n";
-                msgstr += $"{msg.Timestamp}\n";
-                msgstr += $"{msg.Content}\n";
-                foreach (var a in msg.Attachments)
-                {
-                    msgstr += $"{a.Url}\n";
-                }
-                str += msgstr + "\n";
-            }
-            string filename = $"{channel.Name}.txt";
-            File.WriteAllText("files/" + filename, str);
-            await Context.Channel.SendFileAsync("files/" + filename, $"Here you go! I saved {msgs.Count()} messages");
-            File.Delete("files/" + filename);
-            msgs.ToList().Clear();
+            await ReplyAsync($"Starting to archive messages from #{channel.Name}! \n" +
+                $"This might take some time, check back in a bit to see when it's done");
         }
         [Command("pingRole")][Alias("mention")]
         [RequireUserPermission(GuildPermission.ManageRoles)]
