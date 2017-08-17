@@ -4,6 +4,8 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using System.Linq;
+using System.Net;
+using System;
 
 namespace Cortana.Modules
 {
@@ -33,6 +35,19 @@ namespace Cortana.Modules
             await (Context.Client as DiscordSocketClient).SetGameAsync(game, link, StreamType.Twitch);
 
             await ReplyAsync($"Streaming {game} at <{link}>! *(do {new Configuration().Prefix}game to stop streaming)*");
+        }
+
+        [Command("avatar")]
+        public async Task User_Avatar([Remainder] string url)
+        {
+            await Context.Message.DeleteAsync();
+            using (var client = new WebClient())
+            {
+                client.DownloadFile(new Uri(url), "files/tempAvatar.png");
+
+                await Task.Delay(1000);
+                await Context.Client.CurrentUser.ModifyAsync(u => u.Avatar = new Image("files/tempAvatar.png"));
+            }
         }
     }
 }
