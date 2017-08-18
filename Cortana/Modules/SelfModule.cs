@@ -12,6 +12,7 @@ namespace Cortana.Modules
     public class SelfModule : ModuleBase
     {
         [Command("game")]
+        [Summary("Set or clear the Playing status")]
         public async Task SetGame([Optional, Remainder] string gameToSet)
         {
             await Context.Message.DeleteAsync();
@@ -28,6 +29,7 @@ namespace Cortana.Modules
         }
 
         [Command("streaming")]
+        [Summary("Set your status to streaming")]
         public async Task SetStreaming([Remainder] string streamInput)
         {
             var link = (streamInput.Split(' ').ToList().First(s => System.Uri.IsWellFormedUriString(s, System.UriKind.RelativeOrAbsolute)));
@@ -37,7 +39,9 @@ namespace Cortana.Modules
             await ReplyAsync($"Streaming {game} at <{link}>! *(do {new Configuration().Prefix}game to stop streaming)*");
         }
 
-        [Command("avatar")]
+        [Command("setAvatar")]
+        [Alias("avatar")]
+        [Summary("Set your avatar from a provided URL")]
         public async Task User_Avatar([Remainder] string url)
         {
             await Context.Message.DeleteAsync();
