@@ -12,7 +12,8 @@ namespace Cortana.Modules
 {
     public class HelpModule : ModuleBase
     {
-        [Command("halp")][Alias("help")]
+        [Command("help")]
+        [Summary("The help command")]
         public async Task Halp(string command = "")    
         {
             var commandList = CommandHandler._commands.Commands.Where(cmd => Regex.IsMatch(cmd.Name, command, RegexOptions.IgnoreCase)).Where(cmd => string.IsNullOrEmpty(cmd.Remarks)
