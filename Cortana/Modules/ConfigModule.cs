@@ -10,7 +10,9 @@ namespace Cortana.Modules
     [Group("config")]
     public class ConfigModule : ModuleBase
     {
-        [Command("prefix")][Summary("Change the prefix used")][Remarks("config")]
+        [Command("prefix")]
+        [Summary("Change the prefix used")]
+        [Remarks("config")]
         public async Task Prefix(string pref)
         {
             CommandHandler._config.Prefix = pref;
@@ -18,7 +20,9 @@ namespace Cortana.Modules
             await ReplyAsync($"Your prefix is now `{CommandHandler._config.Prefix}`");
         }
         
-        [Command("executeEditedMessages")][Summary("Choose whether or not edited messages are treated as commands")][Remarks("config")]
+        [Command("executeEditedMessages")]
+        [Summary("Choose whether or not edited messages are treated as commands")]
+        [Remarks("config")]
         public async Task Config_ExecuteEditedMessages(string option)
         {
             if (option.ToLower().Equals("false"))
