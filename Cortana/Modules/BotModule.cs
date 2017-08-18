@@ -9,7 +9,8 @@ namespace Cortana.Modules
 {
     public class BotModule : ModuleBase
     {
-        [Command("ping")][Summary("Gets the time to Discord's servers")]
+        [Command("ping")]
+        [Summary("Gets the time to Discord's servers")]
         public async Task Ping()
         {
             var rand = new Random();
