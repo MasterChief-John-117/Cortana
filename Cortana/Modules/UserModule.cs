@@ -10,6 +10,7 @@ namespace Cortana.Modules
     {
         [Command("findUser")]
         [Alias("find", "f")]
+        [Summary("Find a  username/nickname with regex")]
         public async Task Utility_FindUser([Remainder] string user)
         {
             var result = new UserUtils().FindUserFromString(Program.Client, user);
