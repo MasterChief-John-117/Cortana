@@ -146,7 +146,8 @@ namespace Cortana.Modules
             }
         }
 
-        [Command("membersOf")][Summary("Lists the members of a specified role")]
+        [Command("membersOf")]
+        [Summary("Lists the members of a specified role")]
         public async Task MembersOf(string name, ulong guildId = 0)
         {
             var guild = guildId == 0 ? Context.Guild : Context.Client.GetGuildAsync(guildId).Result;
