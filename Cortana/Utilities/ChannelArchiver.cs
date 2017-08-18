@@ -47,6 +47,7 @@ namespace Cortana.Utilities
             await ((dsClient as IDiscordClient).GetChannelAsync(originChannel).Result as IMessageChannel).SendFileAsync("files/" + filename, $"Here you go! I saved {msgs.Count()} messages");
             File.Delete("files/" + filename);
             msgs.ToList().Clear();
+            Console.WriteLine($"Done archiving #{channel.Name}! Check the channel you used the command in for the uploaded file.");
         }
     }
 }
