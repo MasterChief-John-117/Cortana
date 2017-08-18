@@ -17,6 +17,7 @@ namespace Cortana.Modules
     {
         [Command("clear")]
         [Alias("c")]
+        [Summary("Delete all messages by the user in the last `n` (defaults to 100) messages")]
         public async Task Utility_Clear(int count = 99)
         {
             if (count < 1)
@@ -39,6 +40,7 @@ namespace Cortana.Modules
         }
 
         [Command("reply")]
+        [Summary("Quotes a message in the last 1000 messages in the channel given the ID, and then allows you to reply to it")]
         public async Task ReplyToMessage(ulong messageID, [Remainder] string reply)
         {
             await Context.Message.DeleteAsync();
@@ -87,7 +89,8 @@ namespace Cortana.Modules
             await ReplyAsync(reply);
         }
 
-        [Command("markov")][Summary("Markov chain generator for the channel\nOptions: [messages to grab] {minimum word count}")]
+        [Command("markov")]
+        [Summary("Markov chain generator for the channel\nOptions: [messages to grab] {minimum word count}")]
         public async Task ChatMarkov([Remainder] string options = "[300] {5}")
         {
             await Context.Message.DeleteAsync();
@@ -100,6 +103,7 @@ namespace Cortana.Modules
             await ReplyAsync(markovGenerator.GenerateSentence(minLength));
         }
         [Command("archive")]
+        [Summary("Saves all messages in a text channel to a file for download")]
         public async Task GetMessages(ulong channelId = 0)
         {
             if (channelId == 0)
@@ -113,7 +117,9 @@ namespace Cortana.Modules
             await ReplyAsync($"Starting to archive messages from #{channel.Name}! \n" +
                 $"This might take some time, check back in a bit to see when it's done");
         }
-        [Command("pingRole")][Alias("mention")]
+        [Command("pingRole")]
+        [Alias("mention")]
+        [Summary("Allows you to mention a non-pingable role if you have the needed permissions")]
         [RequireUserPermission(GuildPermission.ManageRoles)]
         public async Task Server_Ping(string roleName, [Remainder] string message)
         {
@@ -135,6 +141,7 @@ namespace Cortana.Modules
 
         [Command("repeat")]
         [Alias("re")]
+        [Summary("repeats the last message in chat")]
         public async Task RepeatLastMessage()
         {
             await Context.Message.DeleteAsync();
