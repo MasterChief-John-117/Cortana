@@ -61,6 +61,7 @@ namespace Cortana.Modules
         }
 
         [Command("list")]
+        [Summary("List all custom commands")]
         public async Task Custom_List()
         {
             string msg = "Custom Commands: \n```\n";
@@ -167,8 +168,6 @@ namespace Cortana.Modules
                 JsonConvert.SerializeObject(CommandHandler.CustomCommands, Formatting.Indented));
             
             await ReplyAsync($"The alias {alias} has been removed from the command {cmd.Command}");
-
         }
-
     }
 }
