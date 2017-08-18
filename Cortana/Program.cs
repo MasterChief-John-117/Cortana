@@ -123,7 +123,6 @@ namespace Cortana
                     ThrowOnError = false,
                     DefaultRunMode = RunMode.Async
                 }));
-                //.AddPaginator(Client, Log);
             var provider = new DefaultServiceProviderFactory().CreateServiceProvider(services);
             return provider;
         }
@@ -155,10 +154,8 @@ namespace Cortana
                 sb.Append($" ({_loadedGuilds}/{_totalGuilds})");
                 sb.Append($" [{_stopwatch.ElapsedMilliseconds/1000}s]");
                 sb.Append($" {{{Client.Guilds.Sum(x => x.Users.Count())} users}}");
-                sb.AppendLine($"\n{Math.Round(GC.GetTotalMemory(true) / (1024.0), 2)}kb");
                 Console.Clear();
                 Console.WriteLine(sb.ToString());
-                Console.WriteLine(msg.ToString().Replace(" Gateway    ", ""));
             }
             //Console.WriteLine(msg);
             return Task.FromResult(0);

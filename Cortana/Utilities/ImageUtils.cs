@@ -58,7 +58,6 @@ namespace Cortana.Utilities
                     }
                 }
                 var final = finalColors.OrderByDescending(pair => pair.Value).Take(1).First().Key;
-                Console.WriteLine(final);
                 
                 return final;
             }
