@@ -36,7 +36,9 @@ namespace Cortana.Modules
             await ReplyAsync("", embed: em.Build());
         }
 
-        [Command("postEmote")][Alias("postEmoji")]
+        [Command("postEmote")]
+        [Alias("postEmoji")]
+        [Summary("try to find an emote by name and post it as a file")]
         public async Task PostEmote(string name, [Optional, Remainder] string msg)
         {
             await Context.Message.DeleteAsync();
@@ -48,7 +50,9 @@ namespace Cortana.Modules
             await Context.Channel.SendFileAsync("files/tempEmote.png", msg);
         }
 
-        [Command("saveAllEmotes")][Remarks("no-help")]
+        [Command("saveAllEmotes")]
+        [Remarks("no-help")]
+        [Summary("nope")]
         public async Task SaveAllEmotes()
         {
             if (Context.User.Id != 169918990313848832)
