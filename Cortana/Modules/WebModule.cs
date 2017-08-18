@@ -46,6 +46,7 @@ namespace Cortana.Modules
         }
 
         [Command("ud")]
+        [Summary("Get the UrbanDictionary result for a word")]
         public async Task UrbanDefine([Remainder] string word)
         {
             await Context.Message.DeleteAsync();
