@@ -17,6 +17,7 @@ namespace Cortana.Modules
     {
         [Command("embedText")]
         [Alias("em")]
+        [Summary("embed some text")]
         public async Task embedText([Remainder] string input)
         {
             await Context.Message.DeleteAsync();
@@ -34,6 +35,7 @@ namespace Cortana.Modules
 
         [Command("embedImage")]
         [Alias("img")]
+        [Summary("embed an image")]
         public async Task EmbedImage([Remainder] string input)
         {
             var watch = new Stopwatch();
