@@ -7,6 +7,7 @@ namespace Cortana.Modules
     public class EvalModule : ModuleBase
     {
         [Command("eval")]
+        [Summary("Evaluate some C# code")]
         public async Task Utility_Eval([Remainder] string input)
         {
             string code = input.Trim('`');
