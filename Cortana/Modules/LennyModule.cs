@@ -23,6 +23,7 @@ namespace Cortana.Modules
         }
 
         [Command("lenny")]
+        [Summary("Append the lenny face to a message")]
         public async Task Lenny([Optional, Remainder] string input)
         {
             await Context.Message.DeleteAsync();
