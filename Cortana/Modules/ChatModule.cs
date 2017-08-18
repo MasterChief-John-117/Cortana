@@ -20,22 +20,11 @@ namespace Cortana.Modules
         [Summary("Delete all messages by the user in the last `n` (defaults to 100) messages")]
         public async Task Utility_Clear(int count = 99)
         {
-            if (count < 1)
-                return;
-
-            int limit = (count < 99) ? count : 99;
-
-            var enumerable = (await Context.Channel.GetMessagesAsync(limit: limit + 1).Flatten())
-                .Where(m => m.Author.Id == Context.Client.CurrentUser.Id);
-            
-            foreach (IMessage m in enumerable)
-            {
-                await m.DeleteAsync();
-            }
-            var msg = await ReplyAsync($"Deleted `{enumerable.Count() - 1}` messages!\n_\\*This message will self-destruct in 5 seconds*_");
-            await Task.Delay(4000);
+            new MassDeleter().Individual(Context.Channel.Id, count).FireAndForget();
+            var msg = await ReplyAsync($"Starting to delete a bunch of messages! Check the console window to see when this is done!\n_\\*This message will self-destruct in 2.5 seconds*_");
+            await Task.Delay(2000);
             await msg.ModifyAsync(m => m.Content = "**BOOM!**");
-            await Task.Delay(1000);
+            await Task.Delay(500);
             await msg.DeleteAsync();
         }
 

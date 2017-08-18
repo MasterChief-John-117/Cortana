@@ -107,6 +107,7 @@
     <Compile Include="Utilities\ChannelArchiver.cs" />
     <Compile Include="Utilities\HackyAfUtils.cs" />
     <Compile Include="Utilities\ImageUtils.cs" />
+    <Compile Include="Utilities\MassDeleter.cs" />
     <Compile Include="Utilities\UserUtils.cs" />
   </ItemGroup>
   <ItemGroup>
