@@ -54,10 +54,11 @@ Temporary Items
 *.dll
 *TemporaryGen*
 *.txt
-*.md
 *.ps1
 *.config
 packages/Microsoft.NETCore.Platforms.1.1.0/runtime.json
 *.suo
 [Bb]in
 [Oo]bj
+packages/Newtonsoft.Json.10.0.2/LICENSE.md
+packages/Newtonsoft.Json.10.0.3/LICENSE.md
