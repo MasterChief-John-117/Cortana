@@ -47,7 +47,7 @@ Temporary Items
 .apdisk
 
 # My custom stuff
-*.*ml*
+*.[ix]ml*
 *cache
 *.nupkg
 *._
@@ -60,5 +60,3 @@ packages/Microsoft.NETCore.Platforms.1.1.0/runtime.json
 *.suo
 [Bb]in
 [Oo]bj
-packages/Newtonsoft.Json.10.0.2/LICENSE.md
-packages/Newtonsoft.Json.10.0.3/LICENSE.md
