@@ -168,6 +168,13 @@ namespace Cortana.Modules
                 }
                 File.WriteAllText($"{Context.Guild.Id}_Roles.txt", roleList); 
                 await Context.Channel.SendFileAsync($"{Context.Guild.Id}_Roles.txt");
+
+                if (roleList.Length >= 2000)
+                {
+                    File.WriteAllText($"{Context.Guild.Id}_Roles.txt", roleList);
+                    await Context.Channel.SendFileAsync($"{Context.Guild.Id}_Roles.txt");
+                }
+                else await ReplyAsync(roleList);
             }
             catch (Exception ex)
             {
