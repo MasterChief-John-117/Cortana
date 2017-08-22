@@ -166,8 +166,8 @@ namespace Cortana.Modules
                     string hex = ColorTranslator.ToHtml(myColor);
 
                     int members = users.Count(u => (u as SocketGuildUser).Roles.Contains(role));
-                    roleList += $"{role.Position}: {role.Name} ({role.Id}): {role.Color.R}, {role.Color.G}, {role.Color.B} ({hex}) {members} Members";
-                    Console.WriteLine($"{role.Position}: {role.Name} ({role.Id}): {role.Color.R}, {role.Color.G}, {role.Color.B} ({hex}) {members} Members");
+                    roleList += $"{role.Position}: {role.Name} ({role.Id}): {hex} {members} Members";
+                    Console.WriteLine($"{role.Position}: {role.Name} ({role.Id}): {hex} {members} Members");
                     roleList += "\n";
                 }
                 File.WriteAllText($"{Context.Guild.Id}_Roles.txt", roleList); 
