@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using colour = System.Drawing.Color;
+using System.IO;
+using System.Drawing;
 
 namespace Cortana.Modules
 {
@@ -145,6 +148,35 @@ namespace Cortana.Modules
                 await ReplyAsync(msg);
             }
         }
+
+        [Command("listGuildRoles")]
+        [Alias("getGuildRoles")]
+        public async Task GetAllGuildRoles()
+        {
+            try
+            {
+                var roles = Context.Guild.Roles;
+                string roleList = $"Roles for {Context.Guild.Name}({Context.Guild.Id})\n";
+                foreach (var role in roles.OrderByDescending(r => r.Position))
+                {
+                    colour myColor = colour.FromArgb(role.Color.R, role.Color.G, role.Color.B);
+
+                    string hex = ColorTranslator.ToHtml(myColor);
+                    roleList += $"{role.Position}: {role.Name} ({role.Id}): {role.Color.R}, {role.Color.G}, {role.Color.B} ({hex})";
+                    Console.WriteLine($"{role.Position}: {role.Name} ({role.Id}): {role.Color.R}, {role.Color.G}, {role.Color.B} ({hex})");
+                    roleList += "\n";
+                }
+                File.WriteAllText($"{Context.Guild.Id}_Roles.txt", roleList); 
+                await Context.Channel.SendFileAsync($"{Context.Guild.Id}_Roles.txt");
+            }
+            catch (Exception ex)
+            {
+                await ReplyAsync(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+            }
+
+        }
+
 
         [Command("membersOf")]
         [Summary("Lists the members of a specified role")]
