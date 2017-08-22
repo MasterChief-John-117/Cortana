@@ -156,14 +156,18 @@ namespace Cortana.Modules
             try
             {
                 var roles = Context.Guild.Roles;
+                var users = Context.Guild.GetUsersAsync().Result;
+
                 string roleList = $"Roles for {Context.Guild.Name}({Context.Guild.Id})\n";
                 foreach (var role in roles.OrderByDescending(r => r.Position))
                 {
                     colour myColor = colour.FromArgb(role.Color.R, role.Color.G, role.Color.B);
 
                     string hex = ColorTranslator.ToHtml(myColor);
-                    roleList += $"{role.Position}: {role.Name} ({role.Id}): {role.Color.R}, {role.Color.G}, {role.Color.B} ({hex})";
-                    Console.WriteLine($"{role.Position}: {role.Name} ({role.Id}): {role.Color.R}, {role.Color.G}, {role.Color.B} ({hex})");
+
+                    int members = users.Count(u => (u as SocketGuildUser).Roles.Contains(role));
+                    roleList += $"{role.Position}: {role.Name} ({role.Id}): {role.Color.R}, {role.Color.G}, {role.Color.B} ({hex}) {members} Members";
+                    Console.WriteLine($"{role.Position}: {role.Name} ({role.Id}): {role.Color.R}, {role.Color.G}, {role.Color.B} ({hex}) {members} Members");
                     roleList += "\n";
                 }
                 File.WriteAllText($"{Context.Guild.Id}_Roles.txt", roleList); 
