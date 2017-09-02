@@ -1,5 +1,5 @@
 # Cortana
-### A Selfbot for Discord with easy Configuration and a huge number of functions
+### A Selfbot for Discord with easy Configuration and a huge number of functions *that's still in beta*
 ---
 #### Documentation
 No formal documentation exists yet! If you would like to make some, contact me on Discord at `MasterChief_John-117#1911`
