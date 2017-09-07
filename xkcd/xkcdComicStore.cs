@@ -28,18 +28,28 @@ namespace xkcd
 
         public List<xkcdComic> update()
         {
-            var newestComic = JsonConvert.DeserializeObject<xkcdComic>(new WebClient().DownloadString(new Uri("http://xkcd.com/info.0.json")));
-
-            while (ComicList.Last().num != newestComic.num)
+            try
             {
-                int last = ComicList.Last().num; 
-                if (ComicList.Last().num == 403)
+                var newestComic =
+                    JsonConvert.DeserializeObject<xkcdComic>(
+                        new WebClient().DownloadString(new Uri("http://xkcd.com/info.0.json")));
+
+                while (ComicList.Last().num != newestComic.num)
                 {
-                    last = 404;
+                    int last = ComicList.Last().num;
+                    if (ComicList.Last().num == 403)
+                    {
+                        last = 404;
+                    }
+                    Console.WriteLine($"{last} < {newestComic.num}");
+                    var latestComicGrabbed = JsonConvert.DeserializeObject<xkcdComic>(
+                        new WebClient().DownloadString(new Uri($"http://xkcd.com/{last + 1}/info.0.json")));
+                    ComicList.Add(latestComicGrabbed);
                 }
-                Console.WriteLine($"{last} < {newestComic.num}");
-                var latestComicGrabbed  = JsonConvert.DeserializeObject<xkcdComic>(new WebClient().DownloadString(new Uri($"http://xkcd.com/{last + 1}/info.0.json")));
-                ComicList.Add(latestComicGrabbed);
+            }
+            catch (Exception ex)
+            {
+                
             }
             return ComicList;
         }
