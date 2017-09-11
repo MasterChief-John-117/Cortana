@@ -49,16 +49,23 @@ namespace xkcd
             }
             catch (Exception ex)
             {
-                
+
             }
             return ComicList;
         }
 
         public List<xkcdComic> create()
         {
-            ComicList.Add(JsonConvert.DeserializeObject<xkcdComic>(new WebClient().DownloadString(new Uri("http://xkcd.com/1/info.0.json"))));
-            update();
-            return ComicList;
+            try
+            {
+                ComicList.Add(JsonConvert.DeserializeObject<xkcdComic>(new WebClient().DownloadString(new Uri("http://xkcd.com/1/info.0.json"))));
+                update();
+                return ComicList;
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
         }
     }
 }
