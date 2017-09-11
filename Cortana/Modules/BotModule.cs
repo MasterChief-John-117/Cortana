@@ -28,7 +28,10 @@ namespace Cortana.Modules
         public async Task Info()
         {
             await Context.Message.DeleteAsync();
-            
+
+            try
+            {
+
             var em = new EmbedBuilder();
             em.WithTitle("Info About you and the Cortana Self-Bot");
             em.WithAuthor(new EmbedAuthorBuilder().WithName("Bot Author: MasterChief_John-117").WithIconUrl("https://mcjohn117.duckdns.org/images/MCUSFlags.jpg"));
@@ -45,37 +48,42 @@ namespace Cortana.Modules
 
             em.AddField(new EmbedFieldBuilder().WithName("Text Channels")
                 .WithValue(Context.Client.GetGuildsAsync().Result.Sum(g => g.GetTextChannelsAsync().Result.Count)).WithIsInline(true));
-            em.AddField(new EmbedFieldBuilder().WithName("NSFW Channels")
-                .WithValue(Context.Client.GetGuildsAsync()
-                .Result.Sum(g => g.GetChannelsAsync().Result.Count(c => c.IsNsfw))).WithIsInline(true));
+            //em.AddField(new EmbedFieldBuilder().WithName("NSFW Channels")
+              //  .WithValue(Context.Client.GetGuildsAsync()
+                //.Result.Sum(g => g.GetChannelsAsync().Result.Count(c => c.IsNsfw))).WithIsInline(true));
             em.AddField(new EmbedFieldBuilder().WithName("Open DMs")
                 .WithValue(Context.Client.GetPrivateChannelsAsync().Result.Count).WithIsInline(true));
-            
+
             em.AddField(new EmbedFieldBuilder().WithName("Emotes")
                 .WithValue(Context.Client.GetGuildsAsync().Result.Sum(g => g.Emotes.Count)).WithIsInline(true));
             em.AddField(new EmbedFieldBuilder().WithName("Global Emotes")
                 .WithValue(Context.Client.GetGuildsAsync().Result.Sum(g => g.Emotes.Count(e => e.IsManaged))).WithIsInline(true));
             em.AddField(new EmbedFieldBuilder().WithName("Emote Servers")
                 .WithValue(Context.Client.GetGuildsAsync().Result.Count(g => g.Emotes.Any(e => e.IsManaged))).WithIsInline(true));
-            
+
             em.AddField(new EmbedFieldBuilder().WithName("Guilds Owned")
                 .WithValue(Context.Client.GetGuildsAsync().Result.Count(g => g.OwnerId == Context.User.Id)).WithIsInline(true));
             em.AddField(new EmbedFieldBuilder().WithName("Verified Email")
                 .WithValue(Context.Client.CurrentUser.IsVerified).WithIsInline(true));
             em.AddField(new EmbedFieldBuilder().WithName("2FA Enabled")
                 .WithValue(Context.Client.CurrentUser.IsMfaEnabled).WithIsInline(true));
-            
-            
-            
+
+
+
             em.AddField(new EmbedFieldBuilder().WithName("Memory")
                 .WithValue($"{Math.Round(GC.GetTotalMemory(true) / (1024.0 * 1024.0), 2)} MB").WithIsInline(true));
             em.AddField(new EmbedFieldBuilder().WithName("Uptime")
                 .WithValue((DateTime.Now - Process.GetCurrentProcess().StartTime).ToString(@"dd\.hh\:mm\:ss")).WithIsInline(true));
-            em.AddField(new EmbedFieldBuilder().WithName("API Library")
-                .WithValue($"Discord.Net {DiscordConfig.Version.Substring(0, DiscordConfig.Version.Length - 6)}").WithIsInline(true));
-            
-            
+            //em.AddField(new EmbedFieldBuilder().WithName("API Library")
+              //  .WithValue($"Discord.Net {DiscordConfig.Version.Substring(0, DiscordConfig.Version.Length - 6)}").WithIsInline(true));
+
+
             await ReplyAsync("", embed: em);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }
