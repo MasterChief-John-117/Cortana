@@ -17,8 +17,8 @@ namespace Cortana.Utilities
             {
                 var client = new HttpClient();
                 client.DefaultRequestHeaders.Add("authorization", config.Token);
-          
-                var result = await client.PostAsync($"https://discordapp.com/api/channels/{context.Channel.Id}/messages/{context.Message.Id}/ack",
+
+                var result = await client.PostAsync($"https://discordapp.com/api/v6/guilds/{context.Guild.Id}/ack",
                     new StringContent("{}", Encoding.UTF8, "application/json"));
 
                 if (result.IsSuccessStatusCode)
