@@ -106,6 +106,43 @@ namespace Cortana.Modules
             await ReplyAsync($"Starting to archive messages from #{channel.Name}! \n" +
                 $"This might take some time, check back in a bit to see when it's done");
         }
+
+        [Command("archiveimages")]
+        public async Task GetImages(ulong channelId = 0)
+        {
+            if (channelId == 0)
+            {
+                channelId = Context.Channel.Id;
+            }
+            var channel = Context.Client.GetChannelAsync(channelId).Result;
+            
+            var msgs = (channel as IMessageChannel).GetMessagesAsync().Flatten().Result;
+
+            for(int i = 0; i < 10; i++)
+            {
+                var newmsgs = (channel as IMessageChannel).GetMessagesAsync(msgs.Last(), Direction.Before).Flatten().Result;
+                msgs = msgs.Concat(newmsgs);
+                if (newmsgs.Count() < 100) break;
+            }
+
+            int ats = 0;
+
+            Directory.CreateDirectory($"files/{channel.Name}");
+            using (var client = new WebClient())
+            {
+                foreach (var msg in msgs.Where(m => m.Attachments.Any()))
+                {
+                    foreach (var a in msg.Attachments)
+                    {
+                        ats++;
+                        client.DownloadFile(a.Url, $"files/{channel.Name}/{a.Filename}");
+                    }
+                }
+            }
+            
+            await ReplyAsync($"Downloaded {ats} files from {msgs.Count(m => m.Attachments.Any())} messages");
+        }
+        
         [Command("pingRole")]
         [Alias("mention")]
         [Summary("Allows you to mention a non-pingable role if you have the needed permissions")]
