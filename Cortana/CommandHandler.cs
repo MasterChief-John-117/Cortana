@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Cortana.Modules;
 using Cortana.Utilities;
 using Discord;
 using Discord.Commands;
@@ -13,10 +14,10 @@ using Newtonsoft.Json;
 namespace Cortana
 {
     public class CommandHandler
-    {        
+    {
         public static CommandService _commands;
         public int Iterator;
-        
+
         private DiscordSocketClient _client;
         private IServiceProvider _map;
         public static Configuration _config = new Configuration();
@@ -24,7 +25,7 @@ namespace Cortana
         public static List<CustomCommand> CustomCommands = JsonConvert.DeserializeObject<List<CustomCommand>>(File.ReadAllText("files/customCommands.json"));
 
 
-        private ICommandContext sContext;   
+        private ICommandContext sContext;
         private HackyAfUtils sHAUtils= new HackyAfUtils();
         public async Task Install(IServiceProvider map)
         {
@@ -33,14 +34,16 @@ namespace Cortana
             _client = map.GetService(typeof(DiscordSocketClient)) as DiscordSocketClient;
             _commands = new CommandService();
             await _commands.AddModulesAsync(Assembly.GetEntryAssembly());
-            
+
             _client.MessageReceived += HandleCommand;
             _client.MessageUpdated += HandleEditedCommand;
+            _client.MessageDeleted += new Logging().LogDeletedMessage;
         }
-        
+
         private async Task HandleEditedCommand(
             Cacheable<IMessage, ulong> before, SocketMessage after, ISocketMessageChannel channel)
         {
+            new Logging().LogEditedMessage(before, after, channel).FireAndForget();
             if (_config.ExecEdits) await HandleCommand(after);
         }
 
@@ -51,7 +54,7 @@ namespace Cortana
             if (message == null) return;
             // Mark where the prefix ends and the command begins
             int argPos = 0;
-            
+
             sContext = new CommandContext(_client, message);
             if (!(parameterMessage.Channel is SocketDMChannel) &&
                 _config.GuildSuppressionList.Contains(sContext.Guild.Id) &&
@@ -60,7 +63,7 @@ namespace Cortana
             {
                 await sHAUtils.Acknowledge(_config, new CommandContext(_client, message));
             }
-            
+
             //VERY IMPORTANT: Return if the message is not by the Bot Owner
             //Not doing this allows anyone to execute our commands, which
             //will get Discord to ban us very quickly
@@ -87,7 +90,9 @@ namespace Cortana
                 sContext = null;
                 return;
             }
-            
+
+            _commands.ExecuteAsync(sContext, argPos, _map).FireAndForget();
+            return;
             // Create a Command Context
             // Execute the Command, store the result
             var result = await _commands.ExecuteAsync(sContext, argPos, _map);

@@ -16,8 +16,11 @@ namespace Cortana
         public string Prefix;
         [JsonProperty("executeEdits")]
         public bool ExecEdits;
-        [JsonProperty("guildToSuppressRoles")] 
+        [JsonProperty("guildToSuppressRoles")]
         public List<ulong> GuildSuppressionList;
+
+        [JsonProperty("serversToLog")] public List<ulong> LogServers;
+        [JsonProperty("file")] public bool DebugLogMode;
 
         [JsonConstructor]
         public Configuration(string token, TokenType tType, string prefix, bool edits)
@@ -27,6 +30,8 @@ namespace Cortana
             this.Prefix = prefix;
             this.ExecEdits = edits;
             GuildSuppressionList = new List<ulong>(0);
+            LogServers = new List<ulong>(0);
+            DebugLogMode = false;
         }
 
         public Configuration(ConfigurationBuilder config)
@@ -34,8 +39,10 @@ namespace Cortana
             this.Token = config.Token;
             this.TokenType = config.TokenType;
             this.Prefix = config.Prefix;
-            this.ExecEdits = config.execEdits;   
+            this.ExecEdits = config.execEdits;
             GuildSuppressionList = new List<ulong>(0);
+            LogServers = new List<ulong>(0);
+            DebugLogMode = false;
         }
 
         public Configuration()
@@ -45,7 +52,9 @@ namespace Cortana
             this.TokenType = config.TokenType;
             this.Prefix = config.Prefix;
             this.ExecEdits = config.ExecEdits;
-            this.GuildSuppressionList = config.GuildSuppressionList; 
+            this.GuildSuppressionList = config.GuildSuppressionList;
+            this.LogServers = config.LogServers;
+            this.DebugLogMode = config.DebugLogMode;
         }
 
         public Configuration UpdateToken()
