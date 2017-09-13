@@ -28,7 +28,7 @@ namespace Cortana
         private  Stopwatch _stopwatch = new Stopwatch();
         private WebClient sWClient = new WebClient();
 
-        private string currentVer = "0.1.93";
+        private string currentVer = "0.1.147";
         private string newestVer;
         private string upToDate;
 
@@ -36,12 +36,6 @@ namespace Cortana
         private static Timer cleanMemory;
         public static void Main(string[] args)
         {
-            getMemoryAndLog = new Timer();
-            getMemoryAndLog.AutoReset = true;
-            getMemoryAndLog.Interval = 60 * 1000;
-            getMemoryAndLog.Elapsed += LogMemory;
-            getMemoryAndLog.Start();
-            
             cleanMemory = new Timer();
             cleanMemory.AutoReset = true;
             cleanMemory.Interval = 1000 * 60;
@@ -50,6 +44,7 @@ namespace Cortana
 
             if (!File.Exists("files/xkcd.json"))
             {
+                Directory.CreateDirectory("files");
                 File.WriteAllText("files/xkcd.json", JsonConvert.SerializeObject(new xkcdComicStore().create(), Formatting.Indented));
             }
             else
@@ -57,22 +52,31 @@ namespace Cortana
                 File.WriteAllText("files/xkcd.json", JsonConvert.SerializeObject(new xkcdComicStore().update(), Formatting.Indented));
             }
 
-            new Program().Start().GetAwaiter().GetResult();    
+            new Program().Start().GetAwaiter().GetResult();
         }
 
         public async Task Start()
         {
-            newestVer = sWClient.DownloadString("http://api.mcjohn117.duckdns.org/cortana/latest").Trim();
+            try
+            {
+                newestVer = sWClient.DownloadString("http://api.mcjohn117.duckdns.org/cortana/latest").Trim();
+
+            }
+            catch (Exception e){}
             upToDate = currentVer == newestVer ? $"Cortana is up to date! {currentVer}" : $"Cortana is out of date ({currentVer} < {newestVer})";
             //Make sure we have valid files
             if (!Directory.Exists("files")) Directory.CreateDirectory("files");
+
             if (!File.Exists("files/config.json"))
             {
                 _config = new Configuration(new ConfigurationBuilder().createConfiguration());
                 File.WriteAllText("files/config.json", JsonConvert.SerializeObject(_config, Formatting.Indented));
             }
-            else _config = new Configuration();
-            
+            else
+            {
+                _config = new Configuration();
+            }
+
             if (!File.Exists("files/customCommands.json"))
             {
                 var tempCommands = new List<CustomCommand>();
@@ -82,7 +86,8 @@ namespace Cortana
             Client = new DiscordSocketClient(new DiscordSocketConfig
             {
                 LogLevel = LogSeverity.Verbose, //for most debug, Verbose. For normal use, Crit is fine
-                AlwaysDownloadUsers = false
+                AlwaysDownloadUsers = false,
+                MessageCacheSize = 100
             });
             Client.Log += Log;
 
@@ -129,18 +134,13 @@ namespace Cortana
 
         private async Task _onReady()
         {
-            /*if (!(JsonConvert.DeserializeObject<List<ulong>>(new WebClient().DownloadString("http://api.mcjohn117.duckdns.org/cortana/users/approved"))).Contains(Client.CurrentUser.Id))
-            {
-                Console.WriteLine($"Sorry, {Client.CurrentUser.Username}, but you're not authorized to use this bot yet! Wait for the Beta release");
-                Console.ReadKey();
-                Environment.Exit(1);
-            }*/
             _totalGuilds = Client.Guilds.Count;
+            Console.WriteLine($"Loading {_totalGuilds} guilds");
         }
-        
+
         private Task Log(LogMessage msg)
         {
-            if (msg.ToString().Contains("Connected to"))
+            if (msg.ToString().Contains("Connected to") && !_config.DebugLogMode)
             {
                 _loadedGuilds++;
                 var sb = new StringBuilder();
@@ -157,14 +157,8 @@ namespace Cortana
                 Console.Clear();
                 Console.WriteLine(sb.ToString());
             }
-            //Console.WriteLine(msg);
+            Console.WriteLine(msg);
             return Task.FromResult(0);
-        }
-
-        private static void LogMemory(object source, ElapsedEventArgs e)
-        {
-            string str = $"{DateTime.Now}: {Math.Round(GC.GetTotalMemory(true) / (1024.0 * 1024.0), 2)}mb";
-            //Console.WriteLine(str);
         }
         private static async void CleanMemory(object source, ElapsedEventArgs e)
         {
