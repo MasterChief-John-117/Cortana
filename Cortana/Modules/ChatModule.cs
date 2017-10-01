@@ -29,6 +29,7 @@ namespace Cortana.Modules
         }
 
         [Command("emojify")]
+        [Summary("turns text into emojis")]
         public async Task TurnIntoEmotes([Remainder] string text)
         {
             await Context.Message.DeleteAsync();
@@ -74,7 +75,7 @@ namespace Cortana.Modules
                 }
             }
             if (!msgs.Any(m => m.Id.Equals(messageID)))
-            {            
+            {
                 await ReplyAsync("The requested message could not be found");
                 return;
             }
@@ -109,7 +110,7 @@ namespace Cortana.Modules
             await Context.Message.DeleteAsync();
             int fetch = (Regex.IsMatch(options, @"\[(.+?)\]")) ? Convert.ToInt32(Regex.Matches(options, @"\[(.+?)\]")[0].Groups[1].Value) : 100;
             int minLength = (Regex.IsMatch(options, @"\{(.+?)\}")) ? Convert.ToInt32(Regex.Matches(options, @"\{(.+?)\}")[0].Groups[1].Value) : 5;
-            
+
             var markovGenerator = new MarkovGenerator(Context.Channel.GetMessagesAsync(fetch).Flatten().Result.Reverse().Select(msg => msg.Content).Aggregate((i, j) => i + ". " + j));
             //var markovGenerator = new MarkovGenerator(new ChannelUtils().GetMessagesHugeAsync(Context.Channel, fetch).Result.Select(msg => msg.Content).Aggregate((i, j) => i + " " + j));
 
@@ -177,42 +178,6 @@ namespace Cortana.Modules
 
         }
 
-        [Command("archiveimages")]
-        public async Task GetImages(ulong channelId = 0)
-        {
-            if (channelId == 0)
-            {
-                channelId = Context.Channel.Id;
-            }
-            var channel = Context.Client.GetChannelAsync(channelId).Result;
-            
-            var msgs = (channel as IMessageChannel).GetMessagesAsync().Flatten().Result;
-
-            for(int i = 0; i < 10; i++)
-            {
-                var newmsgs = (channel as IMessageChannel).GetMessagesAsync(msgs.Last(), Direction.Before).Flatten().Result;
-                msgs = msgs.Concat(newmsgs);
-                if (newmsgs.Count() < 100) break;
-            }
-
-            int ats = 0;
-
-            Directory.CreateDirectory($"files/{channel.Name}");
-            using (var client = new WebClient())
-            {
-                foreach (var msg in msgs.Where(m => m.Attachments.Any()))
-                {
-                    foreach (var a in msg.Attachments)
-                    {
-                        ats++;
-                        client.DownloadFile(a.Url, $"files/{channel.Name}/{a.Filename}");
-                    }
-                }
-            }
-            
-            await ReplyAsync($"Downloaded {ats} files from {msgs.Count(m => m.Attachments.Any())} messages");
-        }
-        
         [Command("pingRole")]
         [Alias("mention")]
         [Summary("Allows you to mention a non-pingable role if you have the needed permissions")]

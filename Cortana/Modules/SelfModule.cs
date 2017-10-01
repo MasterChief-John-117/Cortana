@@ -29,7 +29,7 @@ namespace Cortana.Modules
         }
 
         [Command("streaming")]
-        [Summary("Set your status to streaming")]
+        [Summary("Set your status to streaming\nUsage: StreamURL Game Name")]
         public async Task SetStreaming([Remainder] string streamInput)
         {
             var link = (streamInput.Split(' ').ToList().First(s => System.Uri.IsWellFormedUriString(s, System.UriKind.RelativeOrAbsolute)));
