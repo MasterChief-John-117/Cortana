@@ -5,8 +5,12 @@ using Discord.Commands;
 using Newtonsoft.Json;
 using Cortana.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using Discord;
+using Discord.WebSocket;
 using Microsoft.SqlServer.Server;
 
 namespace Cortana.Modules
@@ -42,13 +46,19 @@ namespace Cortana.Modules
             await ReplyAsync($"{guild.Name} has been removed from the Role Mention Suppression list");
         }
 
-        [Command("emoteservers")]
-        public async Task EmoteServers()
+        [Command("test")][Remarks("no-help")]
+        public async Task Rhea( string discrim)
         {
-            string emotes = "Guilds with Emotes:\n";
-            string normals = "Guilds without emotes:\n";
-            foreach (var guild in Context.Client.GetGuildsAsync().Result)
+            string res = "";
+            foreach (var u in Context.Client.GetGuildsAsync().Result.SelectMany(g => g.GetUsersAsync().Result).Where(u => u.Discriminator == discrim).Select(u => u.Id).Distinct().Take(25))
+            {
+                res += $"{Context.Client.GetUserAsync(u).Result.Username}\n";
+            }
+            await ReplyAsync(res);
+        }
+
         [Command("massban")]
+        [Summary("Ban a lot of people. Usage: ID0 ID1 ID2 (etc.) | reason")]
         public async Task MassBan([Remainder] string input)
         {
 

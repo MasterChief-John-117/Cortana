@@ -30,7 +30,7 @@ namespace Cortana
         private  Stopwatch _stopwatch = new Stopwatch();
         private WebClient sWClient = new WebClient();
 
-        private string currentVer = "0.1.147";
+        private string currentVer = "0.1.155";
         private string newestVer;
         private string upToDate;
 
@@ -62,7 +62,6 @@ namespace Cortana
             try
             {
                 newestVer = sWClient.DownloadString("http://api.mcjohn117.duckdns.org/cortana/latest").Trim();
-
             }
             catch (Exception e){}
             upToDate = currentVer == newestVer ? $"Cortana is up to date! {currentVer}" : $"Cortana is out of date ({currentVer} < {newestVer})";

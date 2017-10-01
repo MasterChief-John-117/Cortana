@@ -20,6 +20,7 @@ namespace Cortana.Modules
     public class ServerModule : ModuleBase
     {
         [Command("ban")]
+        [Summary("Bans a user from a userId with a reason that's put into the audit logs")]
         public async Task BanUser(ulong userid, [Remainder, Optional] string reason)
         {
             await Context.Message.DeleteAsync();
