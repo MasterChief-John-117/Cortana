@@ -19,6 +19,8 @@ namespace Cortana
         [JsonProperty("guildToSuppressRoles")]
         public List<ulong> GuildSuppressionList;
 
+        [JsonProperty("LogWebhook")] public string LoggingWebhookUrl;
+
         [JsonProperty("serversToLog")] public List<ulong> LogServers;
         [JsonProperty("file")] public bool DebugLogMode;
 
@@ -55,6 +57,7 @@ namespace Cortana
             this.GuildSuppressionList = config.GuildSuppressionList;
             this.LogServers = config.LogServers;
             this.DebugLogMode = config.DebugLogMode;
+            this.LoggingWebhookUrl = config.LoggingWebhookUrl;
         }
 
         public Configuration UpdateToken()

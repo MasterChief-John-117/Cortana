@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using Discord;
 using Discord.Commands;
 using Discord.Net;
+using Discord.Webhook;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using Timer = System.Timers.Timer;
@@ -22,6 +23,7 @@ namespace Cortana
     public class Program
     {
         public static DiscordSocketClient Client;
+        public static DiscordWebhookClient WHClient;
         private Configuration _config;
         private int _loadedGuilds = 0;
         private int _totalGuilds;
@@ -75,6 +77,7 @@ namespace Cortana
             else
             {
                 _config = new Configuration();
+                File.WriteAllText("files/config.json", JsonConvert.SerializeObject(_config, Formatting.Indented));
             }
 
             if (!File.Exists("files/customCommands.json"))
@@ -83,6 +86,13 @@ namespace Cortana
                 tempCommands.Add(new CustomCommand("cortana", "This is the Cortana self-bot!"));
                 File.WriteAllText("files/customCommands.json", JsonConvert.SerializeObject(tempCommands, Formatting.Indented));
             }
+
+            if (!string.IsNullOrEmpty(_config.LoggingWebhookUrl))
+            {
+                WHClient = new DiscordWebhookClient(Convert.ToUInt64(_config.LoggingWebhookUrl.Substring(36, 18)), _config.LoggingWebhookUrl.Substring(55));
+            }
+
+
             Client = new DiscordSocketClient(new DiscordSocketConfig
             {
                 LogLevel = LogSeverity.Verbose, //for most debug, Verbose. For normal use, Crit is fine
