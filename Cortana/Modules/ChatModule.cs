@@ -28,6 +28,30 @@ namespace Cortana.Modules
             await msg.DeleteAsync();
         }
 
+        [Command("emojify")]
+        public async Task TurnIntoEmotes([Remainder] string text)
+        {
+            await Context.Message.DeleteAsync();
+            string emoted = "";
+            foreach (var c in text.ToLower())
+            {
+                if (Char.IsLetter(c))
+                {
+                    emoted += $":regional_indicator_{c}:";
+                }
+                else if (char.IsWhiteSpace(c))
+                {
+                    emoted += "  ";
+                }
+                else
+                {
+                    emoted += $"**{c}**";
+                }
+
+            }
+            await ReplyAsync(emoted);
+        }
+
         [Command("reply")]
         [Summary("Quotes a message in the last 1000 messages in the channel given the ID, and then allows you to reply to it")]
         public async Task ReplyToMessage(ulong messageID, [Remainder] string reply)
