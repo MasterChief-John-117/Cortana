@@ -48,13 +48,43 @@ namespace Cortana.Modules
             string emotes = "Guilds with Emotes:\n";
             string normals = "Guilds without emotes:\n";
             foreach (var guild in Context.Client.GetGuildsAsync().Result)
+        [Command("massban")]
+        public async Task MassBan([Remainder] string input)
+        {
+
+            await Context.Message.DeleteAsync();
+            string idsFromInput = input.Split('|')[0].Trim();
+            string reason = input.Split('|')[1].Trim();
+            List<ulong> ids = new List<ulong>();
+
+            foreach (var id in idsFromInput.Split())
             {
-                if (guild.Emotes.Any(e => e.IsManaged))
-                    emotes += $"{guild.Name}: {guild.Emotes.Count(e => e.IsManaged)}\n";
-                else normals += $"{guild.Name}\n";
+                ids.Add(Convert.ToUInt64(id));
             }
-            await ReplyAsync(emotes);
-            await ReplyAsync(normals);
+            ids.Sort();
+            foreach (var id in ids)
+            {
+                await Context.Guild.AddBanAsync(id, 0, reason);
+            }
+            var bans = Context.Guild.GetBansAsync().Result;
+            foreach (var id in ids)
+            {
+                var user = (bans.First(b => b.User.Id == id).User);
+                string banMessage = "";
+                try
+                {
+                    banMessage += $"Banned `{user}`(`{user.Id}`)";
+                }
+                catch(Exception e)
+                {
+                    banMessage += $"Banned `{id}`";
+                }
+                if (!string.IsNullOrEmpty(reason))
+                {
+                    banMessage += $" (Reason: `{reason}`)";
+                }
+                await ReplyAsync(banMessage);
+            }
         }
     }
 }
