@@ -131,6 +131,52 @@ namespace Cortana.Modules
                 $"This might take some time, check back in a bit to see when it's done");
         }
 
+        [Command("shortArchive")]
+        [Summary("Saves last 1000 messages in a text channel to a file for download")]
+        public async Task ShortArchive(ulong channelId = 0)
+        {
+            if (channelId == 0)
+            {
+                channelId = Context.Channel.Id;
+            }
+            var channel = Context.Client.GetChannelAsync(channelId).Result;
+
+            var msgs = (channel as IMessageChannel).GetMessagesAsync().Flatten().Result;
+            await Task.Yield();
+
+            for(int i = 0; i < 9; i++)
+            {
+                var newmsgs = (channel as IMessageChannel).GetMessagesAsync(msgs.Last(), Direction.Before).Flatten().Result;
+                msgs = msgs.Concat(newmsgs);
+                if (newmsgs.Count() < 100) break;
+            }
+
+            string str = $"{(channel as IGuildChannel).Guild.Name} | {(channel as IGuildChannel).Guild.Id}\n";
+            str += $"{channel.Name} | {channel.Id}\n";
+            str += $"{DateTime.Now}\n\n";
+            IMessage lastMsg = null;
+            foreach (var msg in msgs.Reverse())
+            {
+                string msgstr = "";
+                if(lastMsg != null && msg.Author.Id != lastMsg.Author.Id) msgstr += $"{msg.Author} | {msg.Author.Id}\n";
+                if (lastMsg != null && msg.Author.Id != lastMsg.Author.Id) msgstr += $"{msg.Timestamp}\n";
+                msgstr += $"{msg.Content}\n";
+                foreach (var a in msg.Attachments)
+                {
+                    msgstr += $"{a.Url}\n";
+                }
+                str += msgstr + "\n";
+                lastMsg = msg;
+            }
+            string filename = $"{channel.Name}.txt";
+            File.WriteAllText("files/" + filename, str);
+            await (Context.Channel).SendFileAsync("files/" + filename, $"Here you go! I saved {msgs.Count()} messages");
+            File.Delete("files/" + filename);
+            msgs.ToList().Clear();
+            Console.WriteLine($"Done archiving #{channel.Name}! Check the channel you used the command in for the uploaded file.");
+
+        }
+
         [Command("archiveimages")]
         public async Task GetImages(ulong channelId = 0)
         {
