@@ -215,15 +215,12 @@ namespace Cortana.Modules
                     Console.WriteLine($"{role.Position}: {role.Name} ({role.Id}): {hex} {members} Members");
                     roleList += "\n";
                 }
-                File.WriteAllText($"{Context.Guild.Id}_Roles.txt", roleList);
-                await Context.Channel.SendFileAsync($"{Context.Guild.Id}_Roles.txt");
-
                 if (roleList.Length >= 2000)
                 {
                     File.WriteAllText($"{Context.Guild.Id}_Roles.txt", roleList);
                     await Context.Channel.SendFileAsync($"{Context.Guild.Id}_Roles.txt");
                 }
-                else await ReplyAsync(roleList);
+                else await ReplyAsync(roleList.Replace("@everyone", "@-everyone"));
             }
             catch (Exception ex)
             {
