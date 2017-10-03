@@ -10,6 +10,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using MarkVSharp;
 using System.Net;
+using System.Web;
 
 namespace Cortana.Modules
 {
@@ -26,6 +27,15 @@ namespace Cortana.Modules
             await msg.ModifyAsync(m => m.Content = "**BOOM!**");
             await Task.Delay(500);
             await msg.DeleteAsync();
+        }
+
+        [Command("clap")]
+        public async Task Clap([Remainder] string input)
+        {
+            await Context.Message.DeleteAsync();
+            string output = input.ToUpper();
+            output = output.Replace(" ", " :clap: ");
+            await ReplyAsync(output);
         }
 
         [Command("emojify")]
