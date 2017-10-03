@@ -34,10 +34,22 @@ namespace Cortana.Modules
 
 
                 emb.AddField(new EmbedFieldBuilder().WithName("Channel").WithValue(after.Channel.Name).WithIsInline(true));
-                emb.AddField(new EmbedFieldBuilder().WithName("Before").WithValue(before.Value.Content));
+                try
+                {
+                    emb.AddField(new EmbedFieldBuilder().WithName("Before").WithValue(before.Value.Content));
+                }
+                catch (Exception exception)
+                {
+                }
                 emb.AddField(new EmbedFieldBuilder().WithName("After").WithValue(after.Content));
                 if (before.Value.Content == after.Content) return;
-                await Program.WHClient.SendMessageAsync("", embeds: new List<Embed> {emb.Build()}.ToArray());
+                try
+                {
+                    await Program.WHClient.SendMessageAsync("", embeds: new List<Embed> {emb.Build()}.ToArray());
+                }
+                catch (Exception ex)
+                {
+                }
             }
             try
             {
@@ -66,12 +78,22 @@ namespace Cortana.Modules
 
                 emb.AddField(new EmbedFieldBuilder().WithName("Guild").WithValue((after.Channel as SocketGuildChannel).Guild.Name).WithIsInline(true));
                 emb.AddField(new EmbedFieldBuilder().WithName("Channel").WithValue("#" + after.Channel.Name).WithIsInline(true));
-                emb.AddField(new EmbedFieldBuilder().WithName("Before").WithValue(before.Value.Content));
-                emb.AddField(new EmbedFieldBuilder().WithName("After").WithValue(after.Content));
+                try
+                {
+                    emb.AddField(new EmbedFieldBuilder().WithName("Before").WithValue(before.Value.Content));
+                }
+                catch (Exception exception)
+                {
+                }                emb.AddField(new EmbedFieldBuilder().WithName("After").WithValue(after.Content));
 
                 if (before.Value.Content == after.Content) return;
-                await Program.WHClient.SendMessageAsync("", embeds: new List<Embed> {emb.Build()}.ToArray());
-
+                try
+                {
+                    await Program.WHClient.SendMessageAsync("", embeds: new List<Embed> {emb.Build()}.ToArray());
+                }
+                catch (Exception ex)
+                {
+                }
 
             }
             catch (Exception e)
@@ -106,7 +128,13 @@ namespace Cortana.Modules
                 emb.AddField(new EmbedFieldBuilder().WithName("DM Channel").WithValue(msg.Value.Channel.Name));
                 emb.AddField(new EmbedFieldBuilder().WithName("Message").WithValue(msg.Value.Content));
 
-                await Program.WHClient.SendMessageAsync("", embeds: new List<Embed> {emb.Build()}.ToArray());
+                try
+                {
+                    await Program.WHClient.SendMessageAsync("", embeds: new List<Embed> {emb.Build()}.ToArray());
+                }
+                catch (Exception ex)
+                {
+                }
             }
             try
             {
@@ -133,8 +161,13 @@ namespace Cortana.Modules
                 emb.AddField(new EmbedFieldBuilder().WithName("Channel").WithValue("#" + msg.Value.Channel.Name).WithIsInline(true));
                 emb.AddField(new EmbedFieldBuilder().WithName("Message").WithValue(msg.Value.Content));
 
-                await Program.WHClient.SendMessageAsync("", embeds: new List<Embed> {emb.Build()}.ToArray());
-
+                try
+                {
+                    await Program.WHClient.SendMessageAsync("", embeds: new List<Embed> {emb.Build()}.ToArray());
+                }
+                catch (Exception ex)
+                {
+                }
 
             }
             catch (Exception e)
