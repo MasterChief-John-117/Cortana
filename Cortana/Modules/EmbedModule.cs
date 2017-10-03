@@ -23,13 +23,14 @@ namespace Cortana.Modules
             await Context.Message.DeleteAsync();
             string title = Regex.Match(input, @"\[([^)]*)\]").Groups[1].Value;
             string text = Regex.Match(input, @"\(([^)]*)\)").Groups[1].Value;
-            if (!input.Contains("(")) text = input;    
+            if (!input.Contains("(")) text = input;
 
+            Random random = new Random();
             var em = new EmbedBuilder();
             em.WithDescription(text);
             em.WithTitle(title);
-            em.WithColor(new Color(240, 71, 71));
-            
+            em.WithColor(new Color(random.Next(0, 255), random.Next(0, 255), random.Next(0, 255)));
+
             await ReplyAsync("", embed: em.Build());
         }
 
@@ -43,10 +44,10 @@ namespace Cortana.Modules
             await Context.Message.DeleteAsync();
             string title = Regex.Match(input, @"\[([^)]*)\]").Groups[1].Value;
             string link = Regex.Match(input, @"\(([^)]*)\)").Groups[1].Value;
-            if (!input.Contains("(")) link = input;    
-            
+            if (!input.Contains("(")) link = input;
+
             var cmd = new CommandHandler();
-        
+
             new WebClient().DownloadFile(new Uri(link), "files/tempImg.png");
             using (Bitmap bitmap = new Bitmap("files/tempImg.png"))
             {
