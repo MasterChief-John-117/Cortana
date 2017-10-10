@@ -99,7 +99,7 @@ namespace Cortana.Modules
             }
         }
         [Command("softban")]
-        [Summary("removes all of a user's messages in the last 24 hour")]
+        [Summary("removes all of a user's messages in the last 24 hours")]
         public async Task softBanUser(ulong userid)
         {
 
