@@ -59,6 +59,46 @@ namespace Cortana.Modules
             }
         }
 
+        [Command("purgeban")]
+        [Summary("Bans a user from a userId with a reason that's put into the audit logs and removes all of their messages from the past 24 hours")]
+        public async Task PurgeBanUser(ulong userid, [Remainder, Optional] string reason)
+        {
+            await Context.Message.DeleteAsync();
+            try
+            {
+                if (Context.Guild.GetBansAsync().Result.Any(b => b.User.Id == userid))
+                {
+
+                    Console.WriteLine(JsonConvert.SerializeObject(Context.Guild.GetBansAsync().Result.First(b => b.User.Id == userid).User, Formatting.Indented));
+
+                    var u = (Context.Guild.GetBansAsync().Result.First(b => b.User.Id == userid).User);
+                    await ReplyAsync($"`{u}`(`{u.Id}`) already banned for `{Context.Guild.GetBansAsync().Result.First(b => b.User.Id == userid).Reason}`");
+                    return;
+                }
+                await Context.Guild.AddBanAsync(userid, 1, reason);
+
+                var user = (Context.Guild.GetBansAsync().Result.First(b => b.User.Id == userid).User);
+                string banMessage = "";
+                try
+                {
+                    banMessage += $"Banned `{user}`(`{user.Id}`)";
+                }
+                catch(Exception e)
+                {
+                    banMessage += $"Banned `{userid}`";
+                }
+                if (!string.IsNullOrEmpty(reason))
+                {
+                    banMessage += $" (Reason: `{reason}`)";
+                }
+                await ReplyAsync(banMessage);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.StackTrace);
+            }
+        }
+
         [Command("listChannels")]
         [Summary("List all channels in the guild")]
         [Remarks("server")]
