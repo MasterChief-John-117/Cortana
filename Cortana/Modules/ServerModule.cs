@@ -98,6 +98,43 @@ namespace Cortana.Modules
                 Console.WriteLine(ex.StackTrace);
             }
         }
+        [Command("softban")]
+        [Summary("removes all of a user's messages in the last 24 hour")]
+        public async Task softBanUser(ulong userid)
+        {
+
+            await Context.Message.DeleteAsync();
+            try
+            {
+                if (Context.Guild.GetBansAsync().Result.Any(b => b.User.Id == userid))
+                {
+
+                    Console.WriteLine(JsonConvert.SerializeObject(Context.Guild.GetBansAsync().Result.First(b => b.User.Id == userid).User, Formatting.Indented));
+
+                    var u = (Context.Guild.GetBansAsync().Result.First(b => b.User.Id == userid).User);
+                    await ReplyAsync($"`{u}`(`{u.Id}`) already banned for `{Context.Guild.GetBansAsync().Result.First(b => b.User.Id == userid).Reason}`");
+                    return;
+                }
+                await Context.Guild.AddBanAsync(userid, 1, "softban");
+                var user = (Context.Guild.GetBansAsync().Result.First(b => b.User.Id == userid).User);
+                await Context.Guild.RemoveBanAsync(userid);
+
+                string banMessage = "";
+                try
+                {
+                    banMessage += $"Softbanned `{user}`(`{user.Id}`)";
+                }
+                catch(Exception e)
+                {
+                    banMessage += $"Softbanned `{userid}`";
+                }
+                await ReplyAsync(banMessage);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.StackTrace);
+            }
+        }
 
         [Command("listChannels")]
         [Summary("List all channels in the guild")]
