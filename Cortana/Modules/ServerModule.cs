@@ -99,7 +99,7 @@ namespace Cortana.Modules
             }
         }
         [Command("softban")]
-        [Summary("removes all of a user's messages in the last 24 hours")]
+        [Summary("removes all of a user's messages in the last 24 hours by banning and unbanning them")]
         public async Task softBanUser(ulong userid)
         {
 
@@ -294,7 +294,7 @@ namespace Cortana.Modules
                 }
                 if (roleList.Length >= 2000)
                 {
-                    File.WriteAllText($"{Context.Guild.Id}_Roles.txt", roleList);
+                    File.WriteAllText($"{Context.Guild.Id}_Roles.txt", roleList.Replace("@everyone", "@-everyone"));
                     await Context.Channel.SendFileAsync($"{Context.Guild.Id}_Roles.txt");
                 }
                 else await ReplyAsync(roleList.Replace("@everyone", "@-everyone"));
