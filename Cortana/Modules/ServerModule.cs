@@ -13,12 +13,39 @@ using System.Drawing;
 using System.Linq.Expressions;
 using System.Net;
 using System.Runtime.InteropServices;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
 namespace Cortana.Modules
 {
     public class ServerModule : ModuleBase
     {
+        [Command("kick")]
+        public async Task KickUser(ulong userId, [Remainder, Optional] string reason)
+        {
+            await Context.Message.DeleteAsync();
+            try
+            {
+                if(!Context.Guild.GetUsersAsync().Result.Any(u => u.Id == userId))
+                {
+                    await ReplyAsync($"`{Program.Client.GetUser(userId)}` (`{userId}`) isn't on this server");
+                    return;
+                }
+                await Context.Guild.GetUserAsync(userId).Result.KickAsync();
+
+                string msg = $"Kicked `{Program.Client.GetUser(userId)}` (`{userId}`)";
+                if (!string.IsNullOrEmpty(reason))
+                {
+                    msg += $" (Reason: {reason})";
+                }
+                await ReplyAsync(msg);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
         [Command("ban")]
         [Summary("Bans a user from a userId with a reason that's put into the audit logs")]
         public async Task BanUser(ulong userid, [Remainder, Optional] string reason)
